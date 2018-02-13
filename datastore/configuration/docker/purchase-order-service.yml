@@ -1,0 +1,36 @@
+spring:
+  data:
+    cassandra:
+      keyspace-name: purchaseOrderEventKeyspace
+  cloud:
+    stream:
+      bindings:
+        purchaseOrderEventOutboundChannel:
+          content-type: application/json
+
+server:
+  use-forward-headers: true
+
+external-service:
+  base-uri-schema:
+    goods-in-product-catalog: http://product-catalog-service/price-list/{priceListId}/goods/{goodsId}
+    account: http://account-service/account/{userName}
+
+security:
+  oauth2:
+    client:
+     clientId: my-trusted-client
+     clientSecret:
+     accessTokenUri: http://authentication-server:9090/oauth/token
+     userAuthorizationUri: http://authentication-server:9090/oauth/authorize
+     auto-approve-scopes: '.*'
+     registered-redirect-uri: http://authentication-server:9090/login
+     clientAuthenticationScheme: form
+    resource:
+     id: oauth2-resource
+     user-info-uri: http://authentication-server:9090/account/userInfo.json
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true

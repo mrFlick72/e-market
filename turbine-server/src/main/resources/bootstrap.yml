@@ -1,0 +1,11 @@
+spring:
+ application:
+   name: turbine-stream-server
+ cloud:
+  config:
+   discovery:
+    enabled: true
+
+management:
+  security:
+    enabled: false

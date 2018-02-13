@@ -1,0 +1,20 @@
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+
+server:
+  port: 8000
+
+management:
+  security:
+    enabled: false
+
+spring:
+  boot:
+   admin:
+     turbine:
+       url: http://localhost:7070/turbine.stream
+       clusters: default
+     routes:
+       endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,activiti,refresh,flyway,liquibase,heapdump,hystrix.stream

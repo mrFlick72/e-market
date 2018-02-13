@@ -1,0 +1,44 @@
+security:
+  oauth2:
+    client:
+     clientId: my-trusted-client
+     clientSecret:
+     accessTokenUri: http://localhost:9090/oauth/token
+     userAuthorizationUri: http://localhost:9090/oauth/authorize
+     auto-approve-scopes: '.*'
+     registered-redirect-uri: http://localhost:9090/login
+     clientAuthenticationScheme: form
+    resource:
+     id: oauth2-resource
+     user-info-uri: http://localhost:9090/account/userInfo.json
+
+
+
+management:
+  security:
+    enabled: false
+
+
+spring:
+  data:
+    cassandra:
+      keyspace-name: productCatalogEventKeyspace
+      schema-action: CREATE_IF_NOT_EXISTS
+    mongodb:
+      database: product_catalog
+  cloud:
+    stream:
+      bindings:
+        goodsEventOutboundChannel:
+          content-type: application/json
+        priceListEventOutboundChannel:
+          content-type: application/json
+
+server:
+  use-forward-headers: true
+  port: 4040
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true

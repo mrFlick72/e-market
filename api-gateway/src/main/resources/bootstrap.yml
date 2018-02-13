@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: api-gateway-server
+  cloud:
+    config:
+      discovery:
+        enabled: true

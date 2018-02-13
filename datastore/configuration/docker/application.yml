@@ -1,0 +1,10 @@
+spring:
+  redis:
+    host: redis
+  rabbitmq:
+    host: rabbitmq
+  data:
+    cassandra:
+      contact-points: cassandra
+    mongodb:
+      host: mongo

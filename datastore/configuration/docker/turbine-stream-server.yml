@@ -1,0 +1,13 @@
+server:
+  port: 7071
+
+turbine:
+  stream:
+    port: 7070
+  appConfig: api-gateway-server,account-serviceproduct-catalog-service,purchase-order-service
+  clusterNameExpression: new String('default')
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true

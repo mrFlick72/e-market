@@ -1,2 +1,2 @@
 # e-market
-An e-commerce developed in a  cloud native and microservices architecture style 
+An e-commerce developed in a  cloud native, microservices architecture style 

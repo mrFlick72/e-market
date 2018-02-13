@@ -1,0 +1,10 @@
+server:
+  port: 9090
+  use-forward-headers: true
+
+management:
+  security:
+    enabled: false
+security:
+  basic:
+    enabled: false

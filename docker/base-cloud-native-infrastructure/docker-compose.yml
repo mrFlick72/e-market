@@ -1,0 +1,32 @@
+version: "2.1"
+
+services:
+  eureka:
+    image: e-market/eureka-server:lastest
+    ports:
+      - "8761:8761"
+    environment:
+      - server.port=8761
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+
+  configuration-server:
+    image: e-market/configuration-server:lastest
+    ports:
+      - "8888:8888"
+    environment:
+      - server.port=8888
+      - spring.profiles.active=native
+      - eureka.instance.preferIpAddress=true
+      - spring.cloud.config.server.native.searchLocations=file:///usr/local/configuration-server/config
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    volumes:
+      - "${LOCAL_REPO}:/usr/local/configuration-server/config"
+    networks:
+      - discovery
+
+networks:
+  discovery:
+    driver: bridge

@@ -1,0 +1,59 @@
+version: "2.1"
+
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - memcache
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+    networks:
+      - messaging
+
+  cassandra:
+    image: cassandra
+    volumes:
+      - "${CASSANDRA_LOCAL_VOLUME}:/var/lib/cassandra"
+    ports:
+      - "9042:9042"
+    networks:
+      - cassandra
+
+  mongo:
+    image: mongo
+    ports:
+    - "27017:27017"
+    volumes:
+      - "${MONGO_LOCAL_VOLUME}:/data/db"
+    networks:
+      - mongo
+
+  database:
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - "${DATABASE_LOCAL_VOLUME}:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - database
+
+networks:
+  memcache:
+    driver: bridge
+  database:
+    driver: bridge
+  messaging:
+    driver: bridge
+  cassandra:
+    driver: bridge
+  mongo:
+    driver: bridge
