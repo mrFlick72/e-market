@@ -13,8 +13,8 @@ server:
 
 external-service:
   base-uri-schema:
-    goods-in-product-catalog: http://product-catalog-service/price-list/{priceListId}/goods/{goodsId}
-    account: http://account-service/account/{userName}
+    goods-in-product-catalog: http://api-gateway/api/v1/product-catalog-service/price-list/{priceListId}/goods/{goodsId}
+    account: http://api-gateway/api/v1/account-service/account/{userName}
 
 security:
   oauth2:

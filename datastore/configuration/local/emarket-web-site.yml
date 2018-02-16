@@ -36,12 +36,11 @@ management:
     enabled: false
 
 zuul:
-  prefix: /api
   sensitiveHeaders:
   ignoredServices: '*'
   ignoreSecurityHeaders: false
   addHostHeader: true
   routes:
-    product-catalog-service: /v1/product-catalog-service/**
-    account-service: /v1/account-service/**
-    purchase-order-service: /v1/purchase-order-service/**
+    gateway:
+      serviceId: api-gateway
+      path: /emarket-api/**

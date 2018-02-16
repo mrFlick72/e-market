@@ -1,8 +1,8 @@
 "use strict"
 
 angular.module("public-e-market-app")
-    .value("accountBaseUrl","/site/api/v1/account-service")
-    .value("productCatalogBaseUrl","/site/api/v1/product-catalog-service")
+    .value("accountBaseUrl","/site/emarket-api/api/v1/account-service")
+    .value("productCatalogBaseUrl","/site/emarket-api/api/v1/product-catalog-service")
     .service("publicSectionService", ["$http", "$q", "accountBaseUrl", "productCatalogBaseUrl",
         function ($http, $q, accountBaseUrl, productCatalogBaseUrl) {
             function baseRestExec(method, path, data, successExtractorDataFn, errorExtractorDataFn) {
