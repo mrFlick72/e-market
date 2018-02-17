@@ -13,15 +13,20 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by mrflick72 on 05/05/17.
  */
+
+@Transactional
 @RunWith(SpringRunner.class)
-//@WebMvcTest(AccountRestFullEndPoint.class)
 @SpringBootTest
 @WebAppConfiguration
 public class AccountRestFullEndPointTests {
@@ -44,7 +49,19 @@ public class AccountRestFullEndPointTests {
         mockMvc.perform(post("/account")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(new Account())))
+                .content(objectMapper.writeValueAsBytes(getAccountTestCase())))
+        .andExpect(status().isCreated())
         .andDo(MockMvcResultHandlers.print());
+    }
+
+    private Account getAccountTestCase() {
+        Account account = new Account();
+        account.setFirstName("Valerio");
+        account.setMail("valval@mail.com");
+        account.setLastName("Vaudi");
+        account.setTaxCode("ASDFGHJKLQWERTYU");
+        account.setUserName("valval");
+        account.setPassword("secret");
+        return account;
     }
 }
