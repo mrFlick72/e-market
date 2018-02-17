@@ -11,8 +11,6 @@ import it.valeriovaudi.emarket.exception.SaveAccountException;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.repository.AccountRepository;
 import it.valeriovaudi.emarket.validator.AccountDataValidationService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,19 +21,21 @@ import java.util.function.Function;
 /**
  * Created by mrflick72 on 04/05/17.
  */
-@Data
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
-    private AccountDataValidationService accountDataValidationService;
+    private final AccountDataValidationService accountDataValidationService;
+    private final EventDomainPubblishService eventDomainPubblishService;
+    private final AccountRepository accountRepository;
 
-    @Autowired
-    private EventDomainPubblishService eventDomainPubblishService;
-
-    @Autowired
-    private AccountRepository accountRepository;
+    public AccountServiceImpl(AccountDataValidationService accountDataValidationService,
+                              EventDomainPubblishService eventDomainPubblishService,
+                              AccountRepository accountRepository) {
+        this.accountDataValidationService = accountDataValidationService;
+        this.eventDomainPubblishService = eventDomainPubblishService;
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public Account createAccount(Account account) {

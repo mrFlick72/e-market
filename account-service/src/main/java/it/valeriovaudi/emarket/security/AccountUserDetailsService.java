@@ -29,6 +29,6 @@ public class AccountUserDetailsService implements UserDetailsService {
         return Optional.ofNullable(accountRepository.findOne(userName))
                 .map((account) -> new User(account.getUserName(), account.getPassword(),
                         Collections.singleton(new SimpleGrantedAuthority(account.getRole()))))
-                .orElseThrow(() -> new UsernameNotFoundException(""));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 }
