@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -22,13 +23,13 @@ import java.net.URI;
 public class ProductCatalogIntegrationService extends AbstractIntegrationService {
 
     private final ProductCatalogAntiCorruptionLayerService productCatalogAntiCorruptionLayerService;
-    private final OAuth2RestTemplate productCatalogIntegrationServiceRestTemplate;
+    private final RestTemplate productCatalogIntegrationServiceRestTemplate;
 
     @Value("${external-service.base-uri-schema.goods-in-product-catalog}")
     private String goodsInProductCatalogServiceUriSchema;
 
     public ProductCatalogIntegrationService(ProductCatalogAntiCorruptionLayerService productCatalogAntiCorruptionLayerService,
-                                            OAuth2RestTemplate productCatalogIntegrationServiceRestTemplate) {
+                                            RestTemplate productCatalogIntegrationServiceRestTemplate) {
         this.productCatalogAntiCorruptionLayerService = productCatalogAntiCorruptionLayerService;
         this.productCatalogIntegrationServiceRestTemplate = productCatalogIntegrationServiceRestTemplate;
     }

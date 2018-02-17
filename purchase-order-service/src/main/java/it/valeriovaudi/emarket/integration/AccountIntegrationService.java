@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -24,13 +25,13 @@ import java.net.URI;
 public class AccountIntegrationService extends AbstractIntegrationService {
 
     private final AccountAntiCorruptionLayerService accountAntiCorruptionLayerService;
-    private final OAuth2RestTemplate accountIntegrationServiceRestTemplate;
+    private final RestTemplate accountIntegrationServiceRestTemplate;
 
     @Value("${external-service.base-uri-schema.account}")
     private String accountServiceUriSchema;
 
     public AccountIntegrationService(AccountAntiCorruptionLayerService accountAntiCorruptionLayerService,
-                                     OAuth2RestTemplate accountIntegrationServiceRestTemplate) {
+                                     RestTemplate accountIntegrationServiceRestTemplate) {
         this.accountAntiCorruptionLayerService = accountAntiCorruptionLayerService;
         this.accountIntegrationServiceRestTemplate = accountIntegrationServiceRestTemplate;
     }

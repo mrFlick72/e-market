@@ -14,12 +14,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.3.RELEASE</version>
+		<version>1.5.10.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
-		<spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
+		<spring-cloud.version>Edgware.SR2</spring-cloud.version>
 		<spring.boot.admin.version>1.5.0</spring.boot.admin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

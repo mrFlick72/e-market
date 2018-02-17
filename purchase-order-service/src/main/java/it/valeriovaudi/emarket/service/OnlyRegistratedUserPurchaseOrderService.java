@@ -33,8 +33,7 @@ public class OnlyRegistratedUserPurchaseOrderService implements PurchaseOrderSer
     private final ProductCatalogIntegrationService productCatalogIntegrationService;
     private final AccountIntegrationService accountIntegrationService;
     private final EventDomainPubblishService eventDomainPubblishService;
-
-    private SecurityUtils securityUtils;
+    private final SecurityUtils securityUtils;
 
     public OnlyRegistratedUserPurchaseOrderService(PurchaseOrderRepository purchaseOrderRepository,
                                                    ProductCatalogIntegrationService productCatalogIntegrationService,
