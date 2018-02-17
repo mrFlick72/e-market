@@ -4,8 +4,6 @@ import it.valeriovaudi.emarket.event.model.AccountValidationErrorEvent;
 import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
 import it.valeriovaudi.emarket.exception.AccountValidationException;
 import it.valeriovaudi.emarket.model.Account;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +17,6 @@ import java.util.regex.Pattern;
  * Created by mrflick72 on 04/05/17.
  */
 
-@Data
 @Component
 public class AccountDataValidationServiceImpl implements AccountDataValidationService {
 
@@ -28,11 +25,15 @@ public class AccountDataValidationServiceImpl implements AccountDataValidationSe
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    @Autowired
-    private EventDomainPubblishService eventDomainPubblishService;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final EventDomainPubblishService eventDomainPubblishService;
+    private final MessageSource messageSource;
+
+    public AccountDataValidationServiceImpl(EventDomainPubblishService eventDomainPubblishService,
+                                            MessageSource messageSource) {
+        this.eventDomainPubblishService = eventDomainPubblishService;
+        this.messageSource = messageSource;
+    }
 
     @Override
     public void validate(String correlationId, Account account) {

@@ -15,7 +15,7 @@ public class AccountBuilder {
 
     private Account account;
 
-    private  AccountBuilder(){}
+    private AccountBuilder(){}
 
     private void setAccount(Account account) {
         this.account = account;

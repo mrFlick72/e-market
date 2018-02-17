@@ -5,8 +5,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.hateoas.AccountHateoasFactory;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.service.AccountService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +14,18 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
  * Created by mrflick72 on 03/05/17.
  */
 
-@Data
 @RestController
 @RequestMapping("/account")
 public class AccountRestFullEndPoint {
 
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private AccountHateoasFactory accountHateoasFactory;
+    private final AccountService accountService;
+    private final AccountHateoasFactory accountHateoasFactory;
+
+    public AccountRestFullEndPoint(AccountService accountService,
+                                   AccountHateoasFactory accountHateoasFactory) {
+        this.accountService = accountService;
+        this.accountHateoasFactory = accountHateoasFactory;
+    }
 
     @PostMapping
     @HystrixCommand(commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})

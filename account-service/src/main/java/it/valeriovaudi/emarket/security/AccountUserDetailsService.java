@@ -20,7 +20,7 @@ public class AccountUserDetailsService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
 
-    AccountUserDetailsService(AccountRepository accountRepository) {
+    public AccountUserDetailsService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
