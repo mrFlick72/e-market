@@ -34,11 +34,13 @@ management:
   security:
     enabled: false
 
+
 zuul:
-  prefix: /api
   sensitiveHeaders:
   ignoredServices: '*'
   ignoreSecurityHeaders: false
   addHostHeader: true
   routes:
-    product-catalog-service: /v1/product-catalog-service/**
+    gateway:
+      serviceId: api-gateway
+      path: /product-catalog-api/**

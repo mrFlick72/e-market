@@ -7,7 +7,6 @@ import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.model.PurchaseOrderStatusEnum;
 import it.valeriovaudi.emarket.security.SecurityUtils;
 import it.valeriovaudi.emarket.service.PurchaseOrderService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

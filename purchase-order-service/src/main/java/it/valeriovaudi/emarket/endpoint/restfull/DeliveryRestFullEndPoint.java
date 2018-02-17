@@ -7,7 +7,6 @@ import it.valeriovaudi.emarket.model.Delivery;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.security.SecurityUtils;
 import it.valeriovaudi.emarket.service.PurchaseOrderService;
-import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

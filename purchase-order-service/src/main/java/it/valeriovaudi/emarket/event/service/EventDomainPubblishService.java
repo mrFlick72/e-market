@@ -1,6 +1,5 @@
 package it.valeriovaudi.emarket.event.service;
 
-import it.valeriovaudi.emarket.event.config.EventMessageChannels;
 import it.valeriovaudi.emarket.event.factory.DomainEventFactory;
 import it.valeriovaudi.emarket.event.model.EventTypeEnum;
 import it.valeriovaudi.emarket.event.model.PurchaseOrderErrorEvent;
@@ -9,7 +8,6 @@ import it.valeriovaudi.emarket.event.repository.PurchaseOrderErrorEventRepositor
 import it.valeriovaudi.emarket.event.repository.PurchaseOrderEventRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;

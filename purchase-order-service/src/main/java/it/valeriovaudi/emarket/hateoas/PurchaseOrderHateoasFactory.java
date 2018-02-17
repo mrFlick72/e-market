@@ -2,7 +2,6 @@ package it.valeriovaudi.emarket.hateoas;
 
 import it.valeriovaudi.emarket.endpoint.restfull.PurchaseOrderRestFullEndPoint;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;

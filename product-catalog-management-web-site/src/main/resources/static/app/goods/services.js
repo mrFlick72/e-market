@@ -1,7 +1,7 @@
 "use strict"
 
 angular.module("product-catalog-management-app")
-    .value("goodsBasePath","/site/api/v1/product-catalog-service/goods")
+    .value("goodsBasePath","/site/product-catalog-api/api/v1/product-catalog-service/goods")
     .service("goodsService", ["commonService", "goodsBasePath","$q", "$http",
         function (commonService, goodsBasePath, $q, $http) {
 

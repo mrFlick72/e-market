@@ -2,14 +2,12 @@ package it.valeriovaudi.emarket.integration;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import it.valeriovaudi.emarket.anticorruptation.AntiCorruptionLayerStrategy;
 import it.valeriovaudi.emarket.anticorruptation.account.AccountAntiCorruptionLayerService;
 import it.valeriovaudi.emarket.model.Customer;
 import it.valeriovaudi.emarket.model.CustomerContact;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;

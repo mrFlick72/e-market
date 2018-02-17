@@ -1,8 +1,6 @@
 package it.valeriovaudi.emarket.repository;
 
 import it.valeriovaudi.emarket.model.Account;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
