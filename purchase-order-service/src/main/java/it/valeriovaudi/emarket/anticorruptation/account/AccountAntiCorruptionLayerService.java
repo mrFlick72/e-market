@@ -1,10 +1,10 @@
 package it.valeriovaudi.emarket.anticorruptation.account;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.valeriovaudi.emarket.anticorruptation.AbstractAntiCorruptionLayerService;
 import it.valeriovaudi.emarket.anticorruptation.AntiCorruptionLayerStrategy;
 import it.valeriovaudi.emarket.model.Customer;
 import it.valeriovaudi.emarket.model.CustomerContact;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by mrflick72 on 30/05/17.
@@ -24,19 +25,24 @@ public class AccountAntiCorruptionLayerService extends AbstractAntiCorruptionLay
     private Map<String, AntiCorruptionLayerStrategy> customerAntiCorruptationRegistry;
     private Map<String, AntiCorruptionLayerStrategy> customerContactAnticorruptationRegistry;
 
-    @Autowired
-    private AccountToCustomerAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy;
+    private final AccountToCustomerAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy;
+    private final AccountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy;
 
-    @Autowired
-    private AccountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy;
+    public AccountAntiCorruptionLayerService(ObjectMapper objectMapper,
+                                             AccountToCustomerAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy,
+                                             AccountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy) {
+        super(objectMapper);
+        this.accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy = accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy;
+        this.accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy = accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy;
+    }
 
     @PostConstruct
     public void init(){
-        customerAntiCorruptationRegistry = new HashMap<>();
+        customerAntiCorruptationRegistry = new ConcurrentHashMap<>();
         customerAntiCorruptationRegistry.put(MediaType.APPLICATION_JSON_VALUE, accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy);
         customerAntiCorruptationRegistry.put(MediaType.APPLICATION_JSON_UTF8_VALUE, accountToCustomerAntiCorruptionLayerServiceHalJsonStrategy);
 
-        customerContactAnticorruptationRegistry = new HashMap<>();
+        customerContactAnticorruptationRegistry = new ConcurrentHashMap<>();
         customerContactAnticorruptationRegistry.put(MediaType.APPLICATION_JSON_VALUE, accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy);
         customerContactAnticorruptationRegistry.put(MediaType.APPLICATION_JSON_UTF8_VALUE, accountToCustomerContactAntiCorruptionLayerServiceHalJsonStrategy);
     }

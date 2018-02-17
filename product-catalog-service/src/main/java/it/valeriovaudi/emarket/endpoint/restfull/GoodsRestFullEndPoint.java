@@ -5,8 +5,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.hateoas.GoodsHateoasFactory;
 import it.valeriovaudi.emarket.model.Goods;
 import it.valeriovaudi.emarket.service.GoodsService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +17,18 @@ import java.util.HashMap;
  * Created by mrflick72 on 09/05/17.
  */
 
-@Data
 @RestController
 @RequestMapping("/goods")
 public class GoodsRestFullEndPoint {
 
-    @Autowired
-    private GoodsService goodsService;
+    private final GoodsService goodsService;
+    private final GoodsHateoasFactory goodsHateoasFactory;
 
-    @Autowired
-    private GoodsHateoasFactory goodsHateoasFactory;
+    public GoodsRestFullEndPoint(GoodsService goodsService,
+                                 GoodsHateoasFactory goodsHateoasFactory) {
+        this.goodsService = goodsService;
+        this.goodsHateoasFactory = goodsHateoasFactory;
+    }
 
     @GetMapping
     @HystrixCommand(commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})

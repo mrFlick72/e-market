@@ -2,7 +2,6 @@ package it.valeriovaudi.emarket.hateoas;
 
 import it.valeriovaudi.emarket.endpoint.restfull.PurchaseOrderRestFullEndPoint;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -21,17 +20,20 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @Component
 public class PurchaseOrderHateoasFactory {
 
-    @Autowired
-    private CustomerHateoasFactory customerHateoasFactory;
+    private final CustomerHateoasFactory customerHateoasFactory;
+    private final DeliveryHateoasFactory deliveryHateoasFactory;
+    private final GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory;
+    private final ShipmentHateoasFactory shipmentHateoasFactory;
 
-    @Autowired
-    private DeliveryHateoasFactory deliveryHateoasFactory;
-
-    @Autowired
-    private GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory;
-
-    @Autowired
-    private ShipmentHateoasFactory shipmentHateoasFactory;
+    public PurchaseOrderHateoasFactory(CustomerHateoasFactory customerHateoasFactory,
+                                       DeliveryHateoasFactory deliveryHateoasFactory,
+                                       GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory,
+                                       ShipmentHateoasFactory shipmentHateoasFactory) {
+        this.customerHateoasFactory = customerHateoasFactory;
+        this.deliveryHateoasFactory = deliveryHateoasFactory;
+        this.goodsInPurchaseOrderHateoasFactory = goodsInPurchaseOrderHateoasFactory;
+        this.shipmentHateoasFactory = shipmentHateoasFactory;
+    }
 
     public Resource<PurchaseOrder> toResource(PurchaseOrder purchaseOrder){
         String orderNumber = purchaseOrder.getOrderNumber();

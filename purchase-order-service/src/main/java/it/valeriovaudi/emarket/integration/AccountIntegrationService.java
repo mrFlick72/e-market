@@ -2,11 +2,10 @@ package it.valeriovaudi.emarket.integration;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import it.valeriovaudi.emarket.anticorruptation.account.AccountAntiCorruptionLayerService;
+import it.valeriovaudi.emarket.anticorruptation.account.AccountAntiCorruptionLayerStrategy;
 import it.valeriovaudi.emarket.model.Customer;
 import it.valeriovaudi.emarket.model.CustomerContact;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.net.URLEncoder;
 
 /**
  * Created by mrflick72 on 30/05/17.
@@ -24,20 +22,23 @@ import java.net.URLEncoder;
 @Service
 public class AccountIntegrationService extends AbstractIntegrationService {
 
-    @Autowired
-    private AccountAntiCorruptionLayerService accountAntiCorruptionLayerService;
-
-    @Autowired
-    private OAuth2RestTemplate accountIntegrationServiceRestTemplate;
+    private final AccountAntiCorruptionLayerStrategy accountAntiCorruptionLayerStrategy;
+    private final OAuth2RestTemplate accountIntegrationServiceRestTemplate;
 
     @Value("${external-service.base-uri-schema.account}")
     private String accountServiceUriSchema;
+
+    public AccountIntegrationService(AccountAntiCorruptionLayerStrategy accountAntiCorruptionLayerStrategy,
+                                     OAuth2RestTemplate accountIntegrationServiceRestTemplate) {
+        this.accountAntiCorruptionLayerStrategy = accountAntiCorruptionLayerStrategy;
+        this.accountIntegrationServiceRestTemplate = accountIntegrationServiceRestTemplate;
+    }
 
     @HystrixCommand(fallbackMethod = "getCustomerFormAccountDataFallback",
             commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
     public Customer getCustomerFormAccountData(String userName){
         ResponseEntity<String> serviceCall = serviceCall(userName);
-        return accountAntiCorruptionLayerService.newCustomer(serviceCall.getBody(),
+        return accountAntiCorruptionLayerStrategy.newCustomer(serviceCall.getBody(),
                 serviceCall.getHeaders().getContentType().toString());
     }
 
@@ -45,7 +46,7 @@ public class AccountIntegrationService extends AbstractIntegrationService {
             commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
     public CustomerContact getCustomerContactFormAccountData(String userName){
         ResponseEntity<String> serviceCall = serviceCall(userName);
-        return accountAntiCorruptionLayerService.newCustomerContact(serviceCall.getBody(),
+        return accountAntiCorruptionLayerStrategy.newCustomerContact(serviceCall.getBody(),
                 serviceCall.getHeaders().getContentType().toString());
     }
 

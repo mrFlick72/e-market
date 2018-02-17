@@ -5,7 +5,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.anticorruptation.productcatalog.ProductCatalogAntiCorruptionLayerService;
 import it.valeriovaudi.emarket.model.Goods;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -22,14 +21,17 @@ import java.net.URI;
 @Service
 public class ProductCatalogIntegrationService extends AbstractIntegrationService {
 
-    @Autowired
-    private ProductCatalogAntiCorruptionLayerService productCatalogAntiCorruptionLayerService;
-
-    @Autowired
-    private OAuth2RestTemplate productCatalogIntegrationServiceRestTemplate;
+    private final ProductCatalogAntiCorruptionLayerService productCatalogAntiCorruptionLayerService;
+    private final OAuth2RestTemplate productCatalogIntegrationServiceRestTemplate;
 
     @Value("${external-service.base-uri-schema.goods-in-product-catalog}")
     private String goodsInProductCatalogServiceUriSchema;
+
+    public ProductCatalogIntegrationService(ProductCatalogAntiCorruptionLayerService productCatalogAntiCorruptionLayerService,
+                                            OAuth2RestTemplate productCatalogIntegrationServiceRestTemplate) {
+        this.productCatalogAntiCorruptionLayerService = productCatalogAntiCorruptionLayerService;
+        this.productCatalogIntegrationServiceRestTemplate = productCatalogIntegrationServiceRestTemplate;
+    }
 
     @HystrixCommand(fallbackMethod = "fallback", commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
     public Goods getGoodsInPriceListData(String priceListId, String goodsId){

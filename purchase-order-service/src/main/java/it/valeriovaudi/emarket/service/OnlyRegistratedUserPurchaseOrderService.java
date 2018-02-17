@@ -10,9 +10,7 @@ import it.valeriovaudi.emarket.integration.ProductCatalogIntegrationService;
 import it.valeriovaudi.emarket.model.*;
 import it.valeriovaudi.emarket.repository.PurchaseOrderRepository;
 import it.valeriovaudi.emarket.security.SecurityUtils;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,25 +25,28 @@ import java.util.stream.Collectors;
  * Created by mrflick72 on 30/05/17.
  */
 
-@Data
 @Slf4j
 @Service
 public class OnlyRegistratedUserPurchaseOrderService implements PurchaseOrderService {
 
-    @Autowired
-    private PurchaseOrderRepository purchaseOrderRepository;
+    private final PurchaseOrderRepository purchaseOrderRepository;
+    private final ProductCatalogIntegrationService productCatalogIntegrationService;
+    private final AccountIntegrationService accountIntegrationService;
+    private final EventDomainPubblishService eventDomainPubblishService;
 
-    @Autowired
-    private ProductCatalogIntegrationService productCatalogIntegrationService;
-
-    @Autowired
-    private AccountIntegrationService accountIntegrationService;
-
-    @Autowired
-    private EventDomainPubblishService eventDomainPubblishService;
-
-    @Autowired
     private SecurityUtils securityUtils;
+
+    public OnlyRegistratedUserPurchaseOrderService(PurchaseOrderRepository purchaseOrderRepository,
+                                                   ProductCatalogIntegrationService productCatalogIntegrationService,
+                                                   AccountIntegrationService accountIntegrationService,
+                                                   EventDomainPubblishService eventDomainPubblishService,
+                                                   SecurityUtils securityUtils) {
+        this.purchaseOrderRepository = purchaseOrderRepository;
+        this.productCatalogIntegrationService = productCatalogIntegrationService;
+        this.accountIntegrationService = accountIntegrationService;
+        this.eventDomainPubblishService = eventDomainPubblishService;
+        this.securityUtils = securityUtils;
+    }
 
     @Override
     @HystrixCommand(commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
