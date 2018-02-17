@@ -6,9 +6,9 @@ import it.valeriovaudi.emarket.hateoas.PurchaseOrderHateoasFactory;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.model.PurchaseOrderStatusEnum;
 import it.valeriovaudi.emarket.security.SecurityUtils;
+import it.valeriovaudi.emarket.service.PurchaseOrderService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,11 +30,14 @@ import java.util.List;
 @RequestMapping("/purchase-order")
 public class PurchaseOrderRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPoint {
 
-    @Autowired
-    private SecurityUtils securityUtils;
+    private final PurchaseOrderHateoasFactory purchaseOrderHateoasFactory;
 
-    @Autowired
-    private PurchaseOrderHateoasFactory purchaseOrderHateoasFactory;
+    public PurchaseOrderRestFullEndPoint(PurchaseOrderService purchaseOrderService,
+                                         SecurityUtils securityUtils,
+                                         PurchaseOrderHateoasFactory purchaseOrderHateoasFactory) {
+        super(purchaseOrderService, securityUtils);
+        this.purchaseOrderHateoasFactory = purchaseOrderHateoasFactory;
+    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

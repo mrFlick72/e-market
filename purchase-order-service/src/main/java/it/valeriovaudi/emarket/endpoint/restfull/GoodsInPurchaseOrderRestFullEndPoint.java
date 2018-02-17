@@ -4,8 +4,9 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.hateoas.GoodsInPurchaseOrderHateoasFactory;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
+import it.valeriovaudi.emarket.security.SecurityUtils;
+import it.valeriovaudi.emarket.service.PurchaseOrderService;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,17 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @Data
-@RestController
 @RequestMapping("/purchase-order")
 public class GoodsInPurchaseOrderRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPoint {
 
-    @Autowired
-    private GoodsInPurchaseOrderHateoasFactory goodsInPriceListHateoasFactory;
+    private final GoodsInPurchaseOrderHateoasFactory goodsInPriceListHateoasFactory;
+
+    public GoodsInPurchaseOrderRestFullEndPoint(PurchaseOrderService purchaseOrderService,
+                                                SecurityUtils securityUtils,
+                                                GoodsInPurchaseOrderHateoasFactory goodsInPriceListHateoasFactory) {
+        super(purchaseOrderService, securityUtils);
+        this.goodsInPriceListHateoasFactory = goodsInPriceListHateoasFactory;
+    }
 
     @GetMapping("/{orderNumber}/goods")
     @PreAuthorize("hasRole('ROLE_USER')")
