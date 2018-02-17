@@ -2,6 +2,8 @@ package it.valeriovaudi.emarket.hateoas;
 
 import it.valeriovaudi.emarket.endpoint.restfull.PurchaseOrderRestFullEndPoint;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -16,22 +18,32 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 /**
  * Created by mrflick72 on 15/06/17.
  */
-
 @Component
 public class PurchaseOrderHateoasFactory {
 
-    private final CustomerHateoasFactory customerHateoasFactory;
-    private final DeliveryHateoasFactory deliveryHateoasFactory;
-    private final GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory;
-    private final ShipmentHateoasFactory shipmentHateoasFactory;
+    private CustomerHateoasFactory customerHateoasFactory;
+    private DeliveryHateoasFactory deliveryHateoasFactory;
+    private GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory;
+    private ShipmentHateoasFactory shipmentHateoasFactory;
 
-    public PurchaseOrderHateoasFactory(CustomerHateoasFactory customerHateoasFactory,
-                                       DeliveryHateoasFactory deliveryHateoasFactory,
-                                       GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory,
-                                       ShipmentHateoasFactory shipmentHateoasFactory) {
+
+    @Autowired
+    public void setCustomerHateoasFactory(CustomerHateoasFactory customerHateoasFactory) {
         this.customerHateoasFactory = customerHateoasFactory;
+    }
+
+    @Autowired
+    public void setDeliveryHateoasFactory(DeliveryHateoasFactory deliveryHateoasFactory) {
         this.deliveryHateoasFactory = deliveryHateoasFactory;
+    }
+
+    @Autowired
+    public void setGoodsInPurchaseOrderHateoasFactory(GoodsInPurchaseOrderHateoasFactory goodsInPurchaseOrderHateoasFactory) {
         this.goodsInPurchaseOrderHateoasFactory = goodsInPurchaseOrderHateoasFactory;
+    }
+
+    @Autowired
+    public void setShipmentHateoasFactory(ShipmentHateoasFactory shipmentHateoasFactory) {
         this.shipmentHateoasFactory = shipmentHateoasFactory;
     }
 

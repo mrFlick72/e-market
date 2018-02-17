@@ -8,8 +8,8 @@ import it.valeriovaudi.emarket.service.PurchaseOrderService;
  */
 public abstract class AbstractPurchaseOrderRestFullEndPoint {
 
-    protected final PurchaseOrderService purchaseOrderService;
-    protected final SecurityUtils securityUtils;
+    final PurchaseOrderService purchaseOrderService;
+    final SecurityUtils securityUtils;
 
     protected AbstractPurchaseOrderRestFullEndPoint(PurchaseOrderService purchaseOrderService,
                                                     SecurityUtils securityUtils) {

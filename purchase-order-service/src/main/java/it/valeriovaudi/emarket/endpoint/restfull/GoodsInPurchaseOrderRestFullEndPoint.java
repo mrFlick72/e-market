@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
  * Created by mrflick72 on 13/06/17.
  */
 
-@Data
 @RequestMapping("/purchase-order")
 public class GoodsInPurchaseOrderRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPoint {
 

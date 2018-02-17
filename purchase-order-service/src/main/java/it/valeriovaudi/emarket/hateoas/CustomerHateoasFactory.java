@@ -2,6 +2,7 @@ package it.valeriovaudi.emarket.hateoas;
 
 import it.valeriovaudi.emarket.endpoint.response.CustomerDataResponseDTO;
 import it.valeriovaudi.emarket.endpoint.restfull.CustomerRestFullEndPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -17,9 +18,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @Component
 public class CustomerHateoasFactory {
 
-    private final PurchaseOrderHateoasFactory purchaseOrderHateoasFactory;
+    private PurchaseOrderHateoasFactory purchaseOrderHateoasFactory;
 
-    public CustomerHateoasFactory(PurchaseOrderHateoasFactory purchaseOrderHateoasFactory) {
+    @Autowired
+    public void setPurchaseOrderHateoasFactory(PurchaseOrderHateoasFactory purchaseOrderHateoasFactory) {
         this.purchaseOrderHateoasFactory = purchaseOrderHateoasFactory;
     }
 

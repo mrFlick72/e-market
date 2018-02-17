@@ -24,7 +24,6 @@ import java.util.List;
  */
 
 
-@Data
 @Slf4j
 @RestController
 @RequestMapping("/purchase-order")
