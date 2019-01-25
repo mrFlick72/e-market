@@ -1,6 +1,5 @@
 package it.valeriovaudi.emarket.exception;
 
-import it.valeriovaudi.emarket.event.model.IdentityValidationErrorEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -9,12 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
-public class IdentityValidationException extends AbstractAccountException {
-    public IdentityValidationException(IdentityValidationErrorEvent event, String msg) {
-        super(event, msg);
+public class IdentityValidationException extends RuntimeException {
+    public IdentityValidationException(String msg) {
+        super(msg);
     }
 
-    public IdentityValidationException(IdentityValidationErrorEvent event, String msg, Throwable cause) {
-        super(event, msg, cause);
-    }
+
 }

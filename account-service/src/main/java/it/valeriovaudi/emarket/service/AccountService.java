@@ -1,21 +1,55 @@
 package it.valeriovaudi.emarket.service;
 
 import it.valeriovaudi.emarket.model.Account;
+import it.valeriovaudi.emarket.repository.AccountRepository;
+import it.valeriovaudi.emarket.validator.AccountDataValidationService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
- * Created by vvaudi on 04/05/17.
+ * Created by mrflick72 on 04/05/17.
  */
-public interface AccountService {
+@Service
+@Transactional
+public class AccountService {
 
-    Account createAccount(Account account);
+    private final AccountDataValidationService accountDataValidationService;
+    private final AccountRepository accountRepository;
 
-    List<Account> findAccountList();
+    public AccountService(AccountDataValidationService accountDataValidationService,
+                          AccountRepository accountRepository) {
+        this.accountDataValidationService = accountDataValidationService;
+        this.accountRepository = accountRepository;
+    }
 
-    Account findAccount(String userName);
+    public Account createAccount(Account account) {
+        // data validation
+        accountDataValidationService.validate(account);
+        // save account
+        Account save = accountRepository.save(account);
+        // fire save account event
+        return save;
+    }
 
-    Account updateAccount(Account account);
+    @Transactional(readOnly = true)
+    public Optional<Account> findAccount(String userName) {
+        return accountRepository.findById(userName);
+    }
 
-    void deleteAccount(String userName);
+    public Account updateAccount(Account account) {
+        // data validation
+        accountDataValidationService.validate(account);
+
+        // save account
+        Account save = accountRepository.save(account);
+
+        return save;
+    }
+
+    public void deleteAccount(String userName) {
+        accountDataValidationService.validateUserName(userName);
+    }
+
 }

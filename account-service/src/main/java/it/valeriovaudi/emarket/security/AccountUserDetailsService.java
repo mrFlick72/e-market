@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Optional;
 
 /**
  * Created by vvaudi on 06/05/17.
@@ -26,7 +25,7 @@ public class AccountUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return Optional.ofNullable(accountRepository.findOne(userName))
+        return accountRepository.findById(userName)
                 .map((account) -> new User(account.getUserName(), account.getPassword(),
                         Collections.singleton(new SimpleGrantedAuthority(account.getRole()))))
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));

@@ -1,6 +1,5 @@
 package it.valeriovaudi.emarket.exception;
 
-import it.valeriovaudi.emarket.event.model.SaveAccountErrorEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -9,14 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class SaveAccountException extends AbstractAccountException {
-    public static final String DEFAULT_MESSAGE  = "error during the saving process";
+public class SaveAccountException extends RuntimeException {
 
-    public SaveAccountException(SaveAccountErrorEvent event, String msg) {
-        super(event, msg);
+    public SaveAccountException(String msg) {
+        super(msg);
     }
 
-    public SaveAccountException(SaveAccountErrorEvent event,String msg, Throwable cause) {
-        super(event, msg, cause);
-    }
 }

@@ -1,0 +1,5 @@
+package it.valeriovaudi.emarket.event.model;
+
+public enum EventType {
+    IDENTITY_VALIDATION_ERROR, CHANGE_PASSWORD, VALIDATION_ERROR, ACCOUNT_NOT_FOUNT, CREATION_ACCOUNT_CONFLICT
+}

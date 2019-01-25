@@ -1,6 +1,5 @@
 package it.valeriovaudi.emarket.exception;
 
-import it.valeriovaudi.emarket.event.model.AccountNotFoundEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -9,14 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class AccountNotFoundException extends AbstractAccountException {
-    public static final String DEFAULT_MESSAGE  = "account not found";
+public class AccountNotFoundException extends RuntimeException {
 
-    public AccountNotFoundException(AccountNotFoundEvent event, String msg) {
-        super(event, msg);
+    public AccountNotFoundException(String msg) {
+        super(msg);
     }
 
-    public AccountNotFoundException(AccountNotFoundEvent event, String msg, Throwable cause) {
-        super(event, msg, cause);
-    }
 }
