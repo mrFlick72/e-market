@@ -48,17 +48,15 @@ public class AccountService {
         accountDataValidationService.validate(account);
 
         if (accountRepository.existsById(account.getUserName()))
-            handleConflictError("the user %s is already registered", account.getUserName());
+            throw handleConflictError("the user %s is already registered", account.getUserName());
 
         return accountRepository.save(account);
     }
 
     @Transactional(readOnly = true)
     public Account findAccount(String userName) {
-        if (!accountRepository.existsById(userName))
-            handleNotFoundError("the user %s is not already registered", userName);
-
-        return accountRepository.findById(userName).get();
+        return accountRepository.findById(userName)
+                .orElseThrow(() -> handleNotFoundError("the user %s is not already registered", userName));
     }
 
     public Account updateAccount(Account account) {
@@ -67,7 +65,7 @@ public class AccountService {
         accountDataValidationService.validate(account);
 
         if (!accountRepository.existsById(account.getUserName()))
-            handleNotFoundError("the user %s is not already registered", account.getUserName());
+            throw handleNotFoundError("the user %s is not already registered", account.getUserName());
 
         return accountRepository.save(account);
     }
@@ -76,20 +74,20 @@ public class AccountService {
         log.info(userName);
 
         if (!accountRepository.existsById(userName))
-            handleNotFoundError("the user %s is not already registered", userName);
+            throw handleNotFoundError("the user %s is not already registered", userName);
 
         accountDataValidationService.validateUserName(userName);
     }
 
-    private void handleConflictError(String messageTemplate, String userName) {
+    private ConflictSaveAccountException handleConflictError(String messageTemplate, String userName) {
         String errorMessage = format(messageTemplate, userName);
         eventDomainPubblishService.publishEventAuditData(EventType.CREATION_ACCOUNT_CONFLICT, Map.of("message", errorMessage));
-        throw new ConflictSaveAccountException(errorMessage);
+        return new ConflictSaveAccountException(errorMessage);
     }
 
-    private void handleNotFoundError(String messageTemplate, String userName) {
+    private AccountNotFoundException handleNotFoundError(String messageTemplate, String userName) {
         String errorMessage = format(messageTemplate, userName);
         eventDomainPubblishService.publishEventAuditData(EventType.ACCOUNT_NOT_FOUNT, Map.of("message", errorMessage));
-        throw new AccountNotFoundException(errorMessage);
+        return new AccountNotFoundException(errorMessage);
     }
 }
