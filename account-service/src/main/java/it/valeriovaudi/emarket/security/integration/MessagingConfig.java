@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MessagingConfig {
 
-    @Bean("emarketAuthServerAccountServiceBridgeInboundQueue")
-    public Queue emarketAuthServerAccountServiceBridgeInboundQueue(){
-        return new Queue("emarketAuthServerAccountServiceBridgeInboundQueue", false, false, true);
+    @Bean("authServerAccountServiceBridgeInboundQueue")
+    public Queue authServerAccountServiceBridgeInboundQueue(){
+        return new Queue("authServerAccountServiceBridgeInboundQueue", false, false, true);
     }
 
 }

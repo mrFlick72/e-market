@@ -1,7 +1,5 @@
 package it.valeriovaudi.emarket.endpoint.restfull;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.hateoas.AccountHateoasFactory;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.service.AccountService;
@@ -28,7 +26,6 @@ public class AccountRestFullEndPoint {
     }
 
     @PostMapping
-    @HystrixCommand(commandProperties = {@HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE")})
     public ResponseEntity createAccount(@RequestBody Account account) {
         Account savedAccount = accountService.createAccount(account);
         return ResponseEntity.created(MvcUriComponentsBuilder
@@ -38,14 +35,12 @@ public class AccountRestFullEndPoint {
 
     @GetMapping("/{userName}")
 //    @PreAuthorize("isAuthenticated()")
-    @HystrixCommand(commandProperties = {@HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE")})
     public ResponseEntity findAccount(@PathVariable String userName) {
-        return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName).get()));
+        return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName)));
     }
 
     @PutMapping("/{userName}")
-    @PreAuthorize("isAuthenticated()")
-    @HystrixCommand(commandProperties = {@HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE")})
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity updateAccount(@PathVariable String userName, @RequestBody Account account) {
         account.setUserName(userName);
         accountService.updateAccount(account);
@@ -53,8 +48,7 @@ public class AccountRestFullEndPoint {
     }
 
     @DeleteMapping("/{userName}")
-    @PreAuthorize("isAuthenticated()")
-    @HystrixCommand(commandProperties = {@HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE")})
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity deleteAccount(@PathVariable String userName) {
         accountService.deleteAccount(userName);
         return ResponseEntity.noContent().build();

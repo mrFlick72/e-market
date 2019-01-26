@@ -1,10 +1,6 @@
 server:
   port: 8761
 
-management:
-  security:
-    enabled: false
-
 spring:
   application:
     name: eureka-server

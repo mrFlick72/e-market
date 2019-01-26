@@ -22,7 +22,7 @@ public class EventAuditData implements Serializable {
     @PrimaryKey
     protected UUID id;
 
-    private String correlationId;
+    private String traceId;
     private String userName;
     private Date timeStamp;
 
