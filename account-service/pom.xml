@@ -22,11 +22,28 @@
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>1.11</java.version>
         <spring-cloud.version>Greenwich.RC2</spring-cloud.version>
+        <jdk11.jaxb.version>2.3.0</jdk11.jaxb.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jdk11.jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jdk11.jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jdk11.jaxb.version}</version>
+        </dependency>
+
         <!-- start web dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
