@@ -3,6 +3,7 @@ package it.valeriovaudi.emarket.event.model;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +15,8 @@ import java.util.UUID;
  */
 
 @Data
-@ToString(callSuper = true)
+@Table
+@ToString
 public class EventAuditData implements Serializable {
 
     @PrimaryKey

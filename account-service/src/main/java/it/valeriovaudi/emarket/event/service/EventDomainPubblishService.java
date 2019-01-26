@@ -3,6 +3,7 @@ package it.valeriovaudi.emarket.event.service;
 import it.valeriovaudi.emarket.event.factory.DomainEventFactory;
 import it.valeriovaudi.emarket.event.model.*;
 import it.valeriovaudi.emarket.event.repository.*;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,11 @@ public class EventDomainPubblishService {
 
     private final DomainEventFactory domainEventFactory;
     private final EventAuditDataRepository eventAuditDataRepository;
-    private final SubscribableChannel accountEventOutboundChannel;
+    private final MessageChannel accountEventOutboundChannel;
 
     public EventDomainPubblishService(DomainEventFactory domainEventFactory,
-                                      EventAuditDataRepository eventAuditDataRepository,
-                                      SubscribableChannel accountEventOutboundChannel) {
+                                      MessageChannel accountEventOutboundChannel,
+                                      EventAuditDataRepository eventAuditDataRepository) {
         this.domainEventFactory = domainEventFactory;
         this.eventAuditDataRepository = eventAuditDataRepository;
         this.accountEventOutboundChannel = accountEventOutboundChannel;
