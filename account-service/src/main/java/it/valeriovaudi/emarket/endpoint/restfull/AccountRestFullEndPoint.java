@@ -4,8 +4,14 @@ import it.valeriovaudi.emarket.hateoas.AccountHateoasFactory;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.service.AccountService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+
+import java.security.Principal;
 
 /**
  * Created by mrflick72 on 03/05/17.
@@ -33,7 +39,11 @@ public class AccountRestFullEndPoint {
     }
 
     @GetMapping("/{userName}")
-    public ResponseEntity findAccount(@PathVariable String userName) {
+    public ResponseEntity findAccount(@PathVariable String userName, Principal principal) {
+        System.out.println(((JwtAuthenticationToken) principal).getTokenAttributes());
+        System.out.println(((JwtAuthenticationToken) principal).getName());
+        System.out.println(((JwtAuthenticationToken) principal).getToken().getHeaders());
+        System.out.println(((JwtAuthenticationToken) principal).getToken().getClaims());
         return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName)));
     }
 
