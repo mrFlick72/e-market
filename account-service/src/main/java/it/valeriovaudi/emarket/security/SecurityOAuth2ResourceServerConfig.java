@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 /**
  * Created by vvaudi on 06/05/17.
  */
+
 @Configuration
 @EnableResourceServer
 public class SecurityOAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {

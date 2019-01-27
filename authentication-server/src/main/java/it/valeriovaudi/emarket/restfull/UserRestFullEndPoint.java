@@ -14,7 +14,6 @@ import java.security.Principal;
  * Created by mrflick72 on 03/05/17.
  */
 
-@Data
 @Slf4j
 @RestController
 @RequestMapping("/account")

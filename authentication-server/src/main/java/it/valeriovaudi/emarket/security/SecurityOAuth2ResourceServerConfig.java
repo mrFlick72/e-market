@@ -16,7 +16,7 @@ public class SecurityOAuth2ResourceServerConfig extends ResourceServerConfigurer
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/account/**").permitAll()
+                .antMatchers("/sign-key/public", "/account/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
     }

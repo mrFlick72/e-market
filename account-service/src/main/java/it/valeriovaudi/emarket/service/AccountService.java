@@ -29,17 +29,13 @@ public class AccountService {
     private final EventDomainPubblishService eventDomainPubblishService;
     private final AccountDataValidationService accountDataValidationService;
     private final AccountRepository accountRepository;
-    private final Tracer tracer;
-    private final Tracing tracing;
 
     public AccountService(EventDomainPubblishService eventDomainPubblishService,
                           AccountDataValidationService accountDataValidationService,
-                          AccountRepository accountRepository, Tracer tracer, Tracing tracing) {
+                          AccountRepository accountRepository) {
         this.eventDomainPubblishService = eventDomainPubblishService;
         this.accountDataValidationService = accountDataValidationService;
         this.accountRepository = accountRepository;
-        this.tracer = tracer;
-        this.tracing = tracing;
     }
 
     public Account createAccount(Account account) {
