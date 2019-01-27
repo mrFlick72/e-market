@@ -3,6 +3,7 @@ package it.valeriovaudi.emarket.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 /**
  * Created by mrflick72 on 03/05/17.
@@ -21,8 +23,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class SecurityOAuth2AutorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
-    public static final String KEY = "e-marcket-supersecure-key;)";
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -60,7 +60,8 @@ public class SecurityOAuth2AutorizationServerConfig extends AuthorizationServerC
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(KEY);
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "secret".toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("emarket"));
         return converter;
     }
 
@@ -73,6 +74,6 @@ public class SecurityOAuth2AutorizationServerConfig extends AuthorizationServerC
                 .scopes("read", "write", "trust", "openid")
                 .resourceIds("oauth2-resource")
                 .autoApprove(true)
-                .accessTokenValiditySeconds(200);
+                .accessTokenValiditySeconds(200000);
     }
 }

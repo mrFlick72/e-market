@@ -4,7 +4,6 @@ import it.valeriovaudi.emarket.hateoas.AccountHateoasFactory;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.service.AccountService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
@@ -34,13 +33,11 @@ public class AccountRestFullEndPoint {
     }
 
     @GetMapping("/{userName}")
-//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity findAccount(@PathVariable String userName) {
         return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName)));
     }
 
     @PutMapping("/{userName}")
-//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity updateAccount(@PathVariable String userName, @RequestBody Account account) {
         account.setUserName(userName);
         accountService.updateAccount(account);
@@ -48,7 +45,6 @@ public class AccountRestFullEndPoint {
     }
 
     @DeleteMapping("/{userName}")
-//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity deleteAccount(@PathVariable String userName) {
         accountService.deleteAccount(userName);
         return ResponseEntity.noContent().build();

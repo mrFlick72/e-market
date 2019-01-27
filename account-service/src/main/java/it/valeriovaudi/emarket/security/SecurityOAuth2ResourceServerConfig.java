@@ -1,24 +1,26 @@
 package it.valeriovaudi.emarket.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
  * Created by vvaudi on 06/05/17.
  */
-
 @Configuration
-@EnableResourceServer
-public class SecurityOAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAdapter {
+
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/account/**").permitAll()
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/account/**").authenticated()
                 .anyRequest().authenticated()
-                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+                .and().oauth2ResourceServer().jwt().jwkSetUri("http://localhost:9090/auth/sign-key/public");
+
     }
 }

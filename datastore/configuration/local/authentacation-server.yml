@@ -1,6 +1,8 @@
 server:
   port: 9090
   use-forward-headers: true
+  servlet:
+    context-path: /auth
 
 management:
   security:
