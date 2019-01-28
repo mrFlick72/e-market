@@ -28,11 +28,9 @@ public class EventDomainPubblishService {
         this.accountEventOutboundChannel = accountEventOutboundChannel;
     }
 
-    public EventAuditData publishEventAuditData(EventType eventType, Map<String, String> messages) {
+    public void publishEventAuditData(EventType eventType, Map<String, String> messages) {
         EventAuditData event = domainEventFactory.newEventAuditData(eventType, messages);
         eventAuditDataRepository.save(event);
         accountEventOutboundChannel.send(MessageBuilder.withPayload(event).build());
-
-        return event;
     }
 }

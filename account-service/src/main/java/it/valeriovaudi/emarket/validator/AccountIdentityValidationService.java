@@ -35,7 +35,7 @@ public class AccountIdentityValidationService implements AccountDataValidator {
     @Override
     public void validateUserName(String userName) {
         if (!userName.equals(securityUtils.getPrincipalUserName())) {
-            throw errorHandlerService.handleIdentityViolation();
+            errorHandlerService.handleIdentityViolation();
         }
     }
 

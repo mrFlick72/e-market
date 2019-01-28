@@ -62,7 +62,7 @@ public class AccountDataValidationService implements AccountDataValidator {
     }
 
     private void manageError(String userName, Map<String, String> errors) {
-        throw errorHandlerService.handleAccountDataViolation(userName, errors);
+         errorHandlerService.handleAccountDataViolation(userName, errors);
     }
 
     private void validateMail(String key, String value, String validationMessageKey, Map<String, String> errors) {

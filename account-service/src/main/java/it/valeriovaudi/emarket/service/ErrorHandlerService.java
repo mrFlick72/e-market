@@ -22,30 +22,29 @@ public class ErrorHandlerService {
         this.eventDomainPubblishService = eventDomainPubblishService;
     }
 
-    public AccountValidationException handleAccountDataViolation(String userName, Map<String, String> errors) {
+    public void handleAccountDataViolation(String userName, Map<String, String> errors) {
         if (errors.size() > 0) {
             eventDomainPubblishService.publishEventAuditData(EventType.VALIDATION_ERROR, errors);
-            return new AccountValidationException(String.format(ACCOUNT_VALIDATION_EXCEPTION_MESSAGE, userName, errors));
+            throw new AccountValidationException(String.format(ACCOUNT_VALIDATION_EXCEPTION_MESSAGE, userName, errors));
         }
-        return null;
     }
 
-    public IdentityValidationException handleIdentityViolation() {
+    public void handleIdentityViolation() {
         String errorMessage = "the user that is not the same user logged";
         eventDomainPubblishService.publishEventAuditData(EventType.IDENTITY_VALIDATION_ERROR, Map.of("message", errorMessage));
-        return new IdentityValidationException(errorMessage);
+        throw new IdentityValidationException(errorMessage);
     }
 
-    public ConflictSaveAccountException handleConflictError(String userName) {
+    public void handleConflictError(String userName) {
         String errorMessage = format("the user %s is already registered", userName);
         eventDomainPubblishService.publishEventAuditData(EventType.CREATION_ACCOUNT_CONFLICT, Map.of("message", errorMessage));
-        return new ConflictSaveAccountException(errorMessage);
+        throw new ConflictSaveAccountException(errorMessage);
     }
 
-    public AccountNotFoundException handleNotFoundError(String userName) {
+    public void handleNotFoundError(String userName) {
         String errorMessage = format("the user %s is not already registered", userName);
         eventDomainPubblishService.publishEventAuditData(EventType.ACCOUNT_NOT_FOUNT, Map.of("message", errorMessage));
 
-        return new AccountNotFoundException(errorMessage);
+        throw new AccountNotFoundException(errorMessage);
     }
 }
