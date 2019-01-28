@@ -40,10 +40,7 @@ public class AccountRestFullEndPoint {
 
     @GetMapping("/{userName}")
     public ResponseEntity findAccount(@PathVariable String userName, Principal principal) {
-        System.out.println(((JwtAuthenticationToken) principal).getTokenAttributes());
-        System.out.println(((JwtAuthenticationToken) principal).getName());
-        System.out.println(((JwtAuthenticationToken) principal).getToken().getHeaders());
-        System.out.println(((JwtAuthenticationToken) principal).getToken().getClaims());
+        System.out.println(principal);
         return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName)));
     }
 
