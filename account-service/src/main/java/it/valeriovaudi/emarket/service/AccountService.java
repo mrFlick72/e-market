@@ -1,47 +1,45 @@
 package it.valeriovaudi.emarket.service;
 
-import brave.Tracer;
-import brave.Tracing;
 import it.valeriovaudi.emarket.event.model.EventType;
 import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
 import it.valeriovaudi.emarket.exception.AccountNotFoundException;
 import it.valeriovaudi.emarket.exception.ConflictSaveAccountException;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.repository.AccountRepository;
-import it.valeriovaudi.emarket.validator.AccountDataValidationService;
+import it.valeriovaudi.emarket.validator.AccountDataValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.String.format;
 
 /**
  * Created by mrflick72 on 04/05/17.
  */
+@Slf4j
 @Service
 @Transactional
-@Slf4j
 public class AccountService {
 
     private final EventDomainPubblishService eventDomainPubblishService;
-    private final AccountDataValidationService accountDataValidationService;
+    private final AccountDataValidator accountDataValidator;
     private final AccountRepository accountRepository;
 
     public AccountService(EventDomainPubblishService eventDomainPubblishService,
-                          AccountDataValidationService accountDataValidationService,
+                          AccountDataValidator accountDataValidator,
                           AccountRepository accountRepository) {
+
         this.eventDomainPubblishService = eventDomainPubblishService;
-        this.accountDataValidationService = accountDataValidationService;
+        this.accountDataValidator = accountDataValidator;
         this.accountRepository = accountRepository;
     }
 
     public Account createAccount(Account account) {
         log.info(account.toString());
 
-        accountDataValidationService.validate(account);
+        accountDataValidator.validate(account);
 
         if (accountRepository.existsById(account.getUserName()))
             throw handleConflictError("the user %s is already registered", account.getUserName());
@@ -51,6 +49,8 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public Account findAccount(String userName) {
+        accountDataValidator.validateUserName(userName);
+
         return accountRepository.findById(userName)
                 .orElseThrow(() -> handleNotFoundError("the user %s is not already registered", userName));
     }
@@ -58,7 +58,7 @@ public class AccountService {
     public Account updateAccount(Account account) {
         log.info(account.toString());
 
-        accountDataValidationService.validate(account);
+        accountDataValidator.validate(account);
 
         if (!accountRepository.existsById(account.getUserName()))
             throw handleNotFoundError("the user %s is not already registered", account.getUserName());
@@ -72,7 +72,7 @@ public class AccountService {
         if (!accountRepository.existsById(userName))
             throw handleNotFoundError("the user %s is not already registered", userName);
 
-        accountDataValidationService.validateUserName(userName);
+        accountDataValidator.validateUserName(userName);
     }
 
     private ConflictSaveAccountException handleConflictError(String messageTemplate, String userName) {

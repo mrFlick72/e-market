@@ -39,8 +39,7 @@ public class AccountRestFullEndPoint {
     }
 
     @GetMapping("/{userName}")
-    public ResponseEntity findAccount(@PathVariable String userName, Principal principal) {
-        System.out.println(principal);
+    public ResponseEntity findAccount(@PathVariable String userName) {
         return ResponseEntity.ok(accountHateoasFactory.toResource(accountService.findAccount(userName)));
     }
 

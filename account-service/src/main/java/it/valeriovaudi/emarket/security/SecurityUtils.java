@@ -2,6 +2,7 @@ package it.valeriovaudi.emarket.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +15,7 @@ public class SecurityUtils {
     public String getPrincipalUserName(){
         String userName = "";
         try{
-            userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            userName = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClaims().get("user_name").toString();
         } catch (Throwable t){
             // ignore it
             log.error("session without an authenticated user");

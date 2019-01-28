@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 
 @Component
-public class AccountDataValidationService {
+public class AccountDataValidationService implements AccountDataValidator {
 
     private static final int TAX_CODE_LENGTH = 16;
     private static final String ACCOUNT_VALIDATION_EXCEPTION_MESSAGE = "The Account %s hasn't satisfies the constraints";
@@ -35,6 +35,7 @@ public class AccountDataValidationService {
         this.messageSource = messageSource;
     }
 
+    @Override
     public void validate(Account account) {
         Map<String, String> errors = new HashMap<>();
 
