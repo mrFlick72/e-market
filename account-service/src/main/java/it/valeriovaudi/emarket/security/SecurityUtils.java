@@ -15,7 +15,8 @@ public class SecurityUtils {
     public String getPrincipalUserName(){
         String userName = "";
         try{
-            userName = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClaims().get("user_name").toString();
+            Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userName = principal.getClaims().get("user_name").toString();
         } catch (Throwable t){
             // ignore it
             log.error("session without an authenticated user");

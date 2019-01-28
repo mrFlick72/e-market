@@ -5,6 +5,7 @@ import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
 import it.valeriovaudi.emarket.exception.IdentityValidationException;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.security.SecurityUtils;
+import it.valeriovaudi.emarket.service.ErrorHandlerService;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -17,12 +18,12 @@ import java.util.Map;
 public class AccountIdentityValidationService implements AccountDataValidator {
 
     private final SecurityUtils securityUtils;
-    private final EventDomainPubblishService eventDomainPubblishService;
+    private final ErrorHandlerService errorHandlerService;
 
     public AccountIdentityValidationService(SecurityUtils securityUtils,
-                                            EventDomainPubblishService eventDomainPubblishService) {
+                                            ErrorHandlerService errorHandlerService) {
         this.securityUtils = securityUtils;
-        this.eventDomainPubblishService = eventDomainPubblishService;
+        this.errorHandlerService = errorHandlerService;
     }
 
     @Override
@@ -33,12 +34,8 @@ public class AccountIdentityValidationService implements AccountDataValidator {
 
     @Override
     public void validateUserName(String userName) {
-        System.out.println(userName);
-        System.out.println(securityUtils.getPrincipalUserName());
         if (!userName.equals(securityUtils.getPrincipalUserName())) {
-            String errorMessage = "the user that is not the same user logged";
-            eventDomainPubblishService.publishEventAuditData(EventType.IDENTITY_VALIDATION_ERROR, Map.of("message", errorMessage));
-            throw new IdentityValidationException(errorMessage);
+            throw errorHandlerService.handleIdentityViolation();
         }
     }
 

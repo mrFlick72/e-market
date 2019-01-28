@@ -1,9 +1,8 @@
 package it.valeriovaudi.emarket.validator;
 
-import it.valeriovaudi.emarket.event.model.EventType;
 import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
-import it.valeriovaudi.emarket.exception.AccountValidationException;
 import it.valeriovaudi.emarket.model.Account;
+import it.valeriovaudi.emarket.service.ErrorHandlerService;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +25,11 @@ public class AccountDataValidationService implements AccountDataValidator {
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    private final EventDomainPubblishService eventDomainPubblishService;
+    private final ErrorHandlerService errorHandlerService;
     private final MessageSource messageSource;
 
-    public AccountDataValidationService(EventDomainPubblishService eventDomainPubblishService,
-                                        MessageSource messageSource) {
-        this.eventDomainPubblishService = eventDomainPubblishService;
+    public AccountDataValidationService(ErrorHandlerService errorHandlerService, MessageSource messageSource) {
+        this.errorHandlerService = errorHandlerService;
         this.messageSource = messageSource;
     }
 
@@ -64,10 +62,7 @@ public class AccountDataValidationService implements AccountDataValidator {
     }
 
     private void manageError(String userName, Map<String, String> errors) {
-        if (errors.size() > 0) {
-            eventDomainPubblishService.publishEventAuditData(EventType.VALIDATION_ERROR, errors);
-            throw new AccountValidationException(String.format(ACCOUNT_VALIDATION_EXCEPTION_MESSAGE, userName));
-        }
+        throw errorHandlerService.handleAccountDataViolation(userName, errors);
     }
 
     private void validateMail(String key, String value, String validationMessageKey, Map<String, String> errors) {

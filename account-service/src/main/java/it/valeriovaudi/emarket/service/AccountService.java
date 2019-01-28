@@ -1,17 +1,12 @@
 package it.valeriovaudi.emarket.service;
 
-import it.valeriovaudi.emarket.event.model.EventType;
 import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
-import it.valeriovaudi.emarket.exception.AccountNotFoundException;
-import it.valeriovaudi.emarket.exception.ConflictSaveAccountException;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.repository.AccountRepository;
 import it.valeriovaudi.emarket.validator.AccountDataValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -23,15 +18,15 @@ import static java.lang.String.format;
 @Transactional
 public class AccountService {
 
-    private final EventDomainPubblishService eventDomainPubblishService;
+    private final ErrorHandlerService errorHandlerService;
     private final AccountDataValidator accountDataValidator;
     private final AccountRepository accountRepository;
 
-    public AccountService(EventDomainPubblishService eventDomainPubblishService,
+    public AccountService(ErrorHandlerService errorHandlerService,
                           AccountDataValidator accountDataValidator,
                           AccountRepository accountRepository) {
+        this.errorHandlerService = errorHandlerService;
 
-        this.eventDomainPubblishService = eventDomainPubblishService;
         this.accountDataValidator = accountDataValidator;
         this.accountRepository = accountRepository;
     }
@@ -42,7 +37,7 @@ public class AccountService {
         accountDataValidator.validate(account);
 
         if (accountRepository.existsById(account.getUserName()))
-            throw handleConflictError("the user %s is already registered", account.getUserName());
+            errorHandlerService.handleConflictError(account.getUserName());
 
         return accountRepository.save(account);
     }
@@ -52,7 +47,7 @@ public class AccountService {
         accountDataValidator.validateUserName(userName);
 
         return accountRepository.findById(userName)
-                .orElseThrow(() -> handleNotFoundError("the user %s is not already registered", userName));
+                .orElseThrow(() -> errorHandlerService.handleNotFoundError(userName));
     }
 
     public Account updateAccount(Account account) {
@@ -61,7 +56,7 @@ public class AccountService {
         accountDataValidator.validate(account);
 
         if (!accountRepository.existsById(account.getUserName()))
-            throw handleNotFoundError("the user %s is not already registered", account.getUserName());
+            throw errorHandlerService.handleNotFoundError(account.getUserName());
 
         return accountRepository.save(account);
     }
@@ -70,20 +65,9 @@ public class AccountService {
         log.info(userName);
 
         if (!accountRepository.existsById(userName))
-            throw handleNotFoundError("the user %s is not already registered", userName);
+            throw errorHandlerService.handleNotFoundError(userName);
 
         accountDataValidator.validateUserName(userName);
     }
 
-    private ConflictSaveAccountException handleConflictError(String messageTemplate, String userName) {
-        String errorMessage = format(messageTemplate, userName);
-        eventDomainPubblishService.publishEventAuditData(EventType.CREATION_ACCOUNT_CONFLICT, Map.of("message", errorMessage));
-        return new ConflictSaveAccountException(errorMessage);
-    }
-
-    private AccountNotFoundException handleNotFoundError(String messageTemplate, String userName) {
-        String errorMessage = format(messageTemplate, userName);
-        eventDomainPubblishService.publishEventAuditData(EventType.ACCOUNT_NOT_FOUNT, Map.of("message", errorMessage));
-        return new AccountNotFoundException(errorMessage);
-    }
 }
