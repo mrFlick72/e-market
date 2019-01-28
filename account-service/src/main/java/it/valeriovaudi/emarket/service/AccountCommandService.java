@@ -14,24 +14,24 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional
-public class CommandAccountService {
+public class AccountCommandService {
 
     private final ErrorHandlerService errorHandlerService;
     private final AccountDataValidator accountDataValidator;
     private final AccountRepository accountRepository;
     private final EventDomainPubblishService eventDomainPubblishService;
-    private final QueryAccountService queryAccountService;
+    private final AccountQueryService accountQueryService;
 
-    public CommandAccountService(ErrorHandlerService errorHandlerService
+    public AccountCommandService(ErrorHandlerService errorHandlerService
             , AccountDataValidator accountDataValidator,
                                  AccountRepository accountRepository,
                                  EventDomainPubblishService eventDomainPubblishService,
-                                 QueryAccountService queryAccountService) {
+                                 AccountQueryService accountQueryService) {
         this.errorHandlerService = errorHandlerService;
         this.accountDataValidator = accountDataValidator;
         this.accountRepository = accountRepository;
         this.eventDomainPubblishService = eventDomainPubblishService;
-        this.queryAccountService = queryAccountService;
+        this.accountQueryService = accountQueryService;
     }
 
 
@@ -51,7 +51,7 @@ public class CommandAccountService {
     public Account updateAccount(Account account) {
         accountDataValidator.validate(account);
 
-        Account found = queryAccountService.findAccount(account.getUserName());
+        Account found = accountQueryService.findAccount(account.getUserName());
         Account save = accountRepository.save(account);
 
         if (!found.getPassword().equals(save.getPassword())) {
@@ -63,7 +63,7 @@ public class CommandAccountService {
     }
 
     public void deleteAccount(String userName) {
-        queryAccountService.findAccount(userName);
+        accountQueryService.findAccount(userName);
 
         accountRepository.deleteById(userName);
         eventDomainPubblishService.publishEventAuditData(EventType.DELETE_AN_ACCOUNT, Map.of());

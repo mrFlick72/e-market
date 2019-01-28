@@ -12,13 +12,13 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional
-public class QueryAccountService {
+public class AccountQueryService {
 
     private final ErrorHandlerService errorHandlerService;
     private final AccountDataValidator accountDataValidator;
     private final AccountRepository accountRepository;
 
-    public QueryAccountService(ErrorHandlerService errorHandlerService,
+    public AccountQueryService(ErrorHandlerService errorHandlerService,
                                AccountDataValidator accountDataValidator,
                                AccountRepository accountRepository) {
         this.errorHandlerService = errorHandlerService;

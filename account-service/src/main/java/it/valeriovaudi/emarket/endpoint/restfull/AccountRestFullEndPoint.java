@@ -2,8 +2,8 @@ package it.valeriovaudi.emarket.endpoint.restfull;
 
 import it.valeriovaudi.emarket.hateoas.AccountHateoasFactory;
 import it.valeriovaudi.emarket.model.Account;
-import it.valeriovaudi.emarket.service.CommandAccountService;
-import it.valeriovaudi.emarket.service.QueryAccountService;
+import it.valeriovaudi.emarket.service.AccountCommandService;
+import it.valeriovaudi.emarket.service.AccountQueryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -16,22 +16,22 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 @RequestMapping("/account")
 public class AccountRestFullEndPoint {
 
-    private final CommandAccountService commandAccountService;
-    private final QueryAccountService queryAccountService;
+    private final AccountCommandService accountCommandService;
+    private final AccountQueryService accountQueryService;
 
     private final AccountHateoasFactory accountHateoasFactory;
 
-    public AccountRestFullEndPoint(CommandAccountService commandAccountService,
-                                   QueryAccountService queryAccountService,
+    public AccountRestFullEndPoint(AccountCommandService accountCommandService,
+                                   AccountQueryService accountQueryService,
                                    AccountHateoasFactory accountHateoasFactory) {
-        this.commandAccountService = commandAccountService;
-        this.queryAccountService = queryAccountService;
+        this.accountCommandService = accountCommandService;
+        this.accountQueryService = accountQueryService;
         this.accountHateoasFactory = accountHateoasFactory;
     }
 
     @PostMapping
     public ResponseEntity createAccount(@RequestBody Account account) {
-        Account savedAccount = commandAccountService.createAccount(account);
+        Account savedAccount = accountCommandService.createAccount(account);
         return ResponseEntity.created(MvcUriComponentsBuilder
                 .fromMethodName(AccountRestFullEndPoint.class, "findAccount", savedAccount.getUserName())
                 .build().toUri()).build();
@@ -39,19 +39,19 @@ public class AccountRestFullEndPoint {
 
     @GetMapping("/{userName}")
     public ResponseEntity findAccount(@PathVariable String userName) {
-        return ResponseEntity.ok(accountHateoasFactory.toResource(queryAccountService.findAccount(userName)));
+        return ResponseEntity.ok(accountHateoasFactory.toResource(accountQueryService.findAccount(userName)));
     }
 
     @PutMapping("/{userName}")
     public ResponseEntity updateAccount(@PathVariable String userName, @RequestBody Account account) {
         account.setUserName(userName);
-        commandAccountService.updateAccount(account);
+        accountCommandService.updateAccount(account);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{userName}")
     public ResponseEntity deleteAccount(@PathVariable String userName) {
-        commandAccountService.deleteAccount(userName);
+        accountCommandService.deleteAccount(userName);
         return ResponseEntity.noContent().build();
     }
 }
