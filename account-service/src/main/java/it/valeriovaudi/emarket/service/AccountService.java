@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
-
 /**
  * Created by mrflick72 on 04/05/17.
  */
