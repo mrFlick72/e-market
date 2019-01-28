@@ -1,19 +1,18 @@
 package it.valeriovaudi.emarket.validator;
 
-import it.valeriovaudi.emarket.event.model.EventType;
-import it.valeriovaudi.emarket.event.service.EventDomainPubblishService;
-import it.valeriovaudi.emarket.exception.IdentityValidationException;
 import it.valeriovaudi.emarket.model.Account;
 import it.valeriovaudi.emarket.security.SecurityUtils;
 import it.valeriovaudi.emarket.service.ErrorHandlerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import static java.util.Optional.ofNullable;
 
 /**
  * Created by mrflick72 on 04/05/17.
  */
 
+@Slf4j
 @Component
 public class AccountIdentityValidationService implements AccountDataValidator {
 
@@ -28,15 +27,18 @@ public class AccountIdentityValidationService implements AccountDataValidator {
 
     @Override
     public void validate(Account account) {
-        System.out.println(account);
         validateUserName(account.getUserName());
     }
 
     @Override
     public void validateUserName(String userName) {
-        if (!userName.equals(securityUtils.getPrincipalUserName())) {
-            errorHandlerService.handleIdentityViolation();
-        }
+        ofNullable(securityUtils.getPrincipalUserName())
+                .filter(loggedUserName -> !loggedUserName.isBlank())
+                .ifPresent(loggedUserName -> {
+                    if (!userName.equals(loggedUserName)) {
+                        errorHandlerService.handleIdentityViolation();
+                    }
+                });
     }
 
 }

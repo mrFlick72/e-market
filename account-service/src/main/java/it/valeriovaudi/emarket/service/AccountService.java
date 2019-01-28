@@ -76,8 +76,6 @@ public class AccountService {
     }
 
     public void deleteAccount(String userName) {
-        log.info(userName);
-
         findAccount(userName);
 
         accountRepository.deleteById(userName);
