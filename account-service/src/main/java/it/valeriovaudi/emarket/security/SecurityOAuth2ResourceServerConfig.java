@@ -1,5 +1,6 @@
 package it.valeriovaudi.emarket.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +24,8 @@ import java.util.stream.Stream;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwkSetUri;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -34,7 +37,7 @@ public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAda
                 .and().oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(new GrantedAuthoritiesExtractor())
-                .jwkSetUri("http://localhost:9090/auth/sign-key/public");
+                .jwkSetUri(jwkSetUri);
 
     }
 
@@ -44,7 +47,7 @@ public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAda
             Stream<SimpleGrantedAuthority> tokenAuthorities =
                     ((List<String>) jwt.getClaims().getOrDefault("authorities", Collections.<String>emptyList()))
                             .stream()
-                            .map(role -> "ROLE_"+role)
+                            .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                             .map(SimpleGrantedAuthority::new);
 
 
