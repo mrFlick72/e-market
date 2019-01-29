@@ -27,7 +27,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         priceListDataValidator.validate(correlationId, priceList);
         PriceList save = doSavePriceListData(correlationId, priceList);
 
-        eventDomainPubblishService.publishPriceListEvent(correlationId,priceList.getId(),
+        eventDomainPubblishService.publishPriceListEvent(correlationId, priceList.getId(),
                 priceList.getName(), EventTypeEnum.CREATE);
         return save;
     }
@@ -40,7 +40,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
     @Override
     public PriceList findPriceList(String idPriceList) {
         doCheckPriceListExist(UUID.randomUUID().toString(), idPriceList);
-        return priceListRepository.findOne(idPriceList);
+        return priceListRepository.findById(idPriceList).get();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         String correlationId = UUID.randomUUID().toString();
         doCheckPriceListExist(correlationId, idPriceList);
 
-        return getSafeGoodsInPriceList.apply(priceListRepository.findOne(idPriceList));
+        return getSafeGoodsInPriceList.apply(priceListRepository.findById(idPriceList).get());
     }
 
     @Override
@@ -57,11 +57,11 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         doCheckPriceListExist(correlationId, idPriceList);
         doCheckGoodsExist(correlationId, idGoods);
 
-        GoodsInPriceList goodsInPriceListAux = getSafeGoodsInPriceList.apply(priceListRepository.findOne(idPriceList)).
+        GoodsInPriceList goodsInPriceListAux = getSafeGoodsInPriceList.apply(priceListRepository.findById(idPriceList).get()).
                 stream().filter(goodsInPriceList -> goodsInPriceList.getGoods().getId().equals(idGoods))
                 .findFirst().orElse(null);
 
-        if(goodsInPriceListAux == null){
+        if (goodsInPriceListAux == null) {
             throw new GoodsInPriceListNotFoundException(GoodsInPriceListNotFoundException.DEFAULT_MESSAGE);
         }
         return goodsInPriceListAux;
@@ -73,9 +73,9 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         doCheckPriceListExist(correlationId, idPriceList);
         doCheckGoodsExist(correlationId, idGoods);
 
-        PriceList priceList = priceListRepository.findOne(idPriceList);
+        PriceList priceList = priceListRepository.findById(idPriceList).get();
 
-        Goods goods  = goodsRepository.findOne(idGoods);
+        Goods goods = goodsRepository.findById(idGoods).get();
         List<GoodsInPriceList> goodsInPriceListAux = getSafeGoodsInPriceList.apply(priceList);
 
         GoodsInPriceList goodsInPriceList = new GoodsInPriceList();
@@ -84,7 +84,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
 
         int index = goodsInPriceListAux.indexOf(goodsInPriceList);
 
-        if(index == -1){
+        if (index == -1) {
             goodsInPriceListAux.add(goodsInPriceList);
         } else {
             goodsInPriceListAux.set(index, goodsInPriceList);
@@ -92,7 +92,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
 
         PriceList priceListAux = doSavePriceListData(correlationId, priceList);
 
-        eventDomainPubblishService.publishPriceListEvent(correlationId,priceList.getId(),
+        eventDomainPubblishService.publishPriceListEvent(correlationId, priceList.getId(),
                 priceList.getName(), EventTypeEnum.UPDATE);
 
         return priceListAux;
@@ -104,8 +104,8 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         doCheckPriceListExist(correlationId, idPriceList);
         doCheckGoodsExist(correlationId, idGoods);
 
-        PriceList priceList = priceListRepository.findOne(idPriceList);
-        Goods goods  = goodsRepository.findOne(idGoods);
+        PriceList priceList = priceListRepository.findById(idPriceList).get();
+        Goods goods = goodsRepository.findById(idGoods).get();
 
         List<GoodsInPriceList> goodsInPriceListAux = getSafeGoodsInPriceList.apply(priceList);
 
@@ -115,7 +115,7 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
 
         PriceList priceListAux = doSavePriceListData(correlationId, priceList);
 
-        eventDomainPubblishService.publishPriceListEvent(correlationId,priceList.getId(),
+        eventDomainPubblishService.publishPriceListEvent(correlationId, priceList.getId(),
                 priceList.getName(), EventTypeEnum.UPDATE);
 
         return priceListAux;
@@ -133,6 +133,6 @@ public class PriceListServiceImpl extends AbstractService implements PriceListSe
         String correlationId = UUID.randomUUID().toString();
         doCheckPriceListExist(correlationId, idPriceList);
 
-        priceListRepository.delete(idPriceList);
+        priceListRepository.deleteById(idPriceList);
     }
 }

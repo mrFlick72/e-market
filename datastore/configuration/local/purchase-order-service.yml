@@ -18,9 +18,9 @@ external-service:
 
 security:
   oauth2:
-    resource:
-     id: oauth2-resource
-     user-info-uri: http://localhost:9090/account/userInfo.json
+    resourceserver:
+      jwt:
+        jwk-set-uri: http://localhost:9090/auth/sign-key/public
 
 eureka:
   client:

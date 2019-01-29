@@ -7,5 +7,5 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
  * Created by vvaudi on 10/05/17.
  */
 
-public interface GoodsEventRepository extends CassandraRepository<GoodsEvent> {
+public interface GoodsEventRepository extends CassandraRepository<GoodsEvent, String> {
 }

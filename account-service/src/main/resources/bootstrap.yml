@@ -5,12 +5,3 @@ spring:
     config:
       discovery:
         enabled: true
-#logging:
-#  level:
-#    root: DEBUG
-
-security:
-  oauth2:
-    resourceserver:
-      jwt:
-        jwk-set-uri: http://localhost:9090/auth/sign-key/public

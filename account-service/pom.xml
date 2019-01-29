@@ -25,6 +25,7 @@
         <java.version>11</java.version>
         <spring-cloud.version>Greenwich.RC2</spring-cloud.version>
         <jdk11.jaxb.version>2.3.0</jdk11.jaxb.version>
+        <spring.security.oaut2.version>5.1.3.RELEASE</spring.security.oaut2.version>
     </properties>
 
     <dependencies>
@@ -124,14 +125,14 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-resource-server</artifactId>
-            <version>5.1.3.RELEASE</version>
+            <version>${spring.security.oaut2.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-jose -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
-            <version>5.1.3.RELEASE</version>
+            <version>${spring.security.oaut2.version}</version>
         </dependency>
         <!-- end  security dependencies -->
 

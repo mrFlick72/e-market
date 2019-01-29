@@ -21,7 +21,7 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
         priceListDataValidator.validate(correlationId, goods);
         Goods save = doSaveGoodsData(correlationId, goods);
 
-        eventDomainPubblishService.publishGoodsEvent(correlationId,goods.getId(), goods.getName(),
+        eventDomainPubblishService.publishGoodsEvent(correlationId, goods.getId(), goods.getName(),
                 goods.getBarCode(), goods.getCategory(), EventTypeEnum.CREATE);
         return save;
     }
@@ -39,7 +39,7 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
     @Override
     public Goods findGoods(String idGoods) {
         doCheckGoodsExist(UUID.randomUUID().toString(), idGoods);
-        return goodsRepository.findOne(idGoods);
+        return goodsRepository.findById(idGoods).get();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
         String correlationId = UUID.randomUUID().toString();
         doCheckGoodsExist(correlationId, idGoods);
 
-        Goods goods = goodsRepository.findOne(idGoods);
+        Goods goods = goodsRepository.findById(idGoods).get();
         Map<String, String> stringStringMap = getSafeGoodsAttribute.apply(goods);
         stringStringMap.put(goodsAttributeKey, goodsAttributeValue);
         goods.setGoodsAttribute(stringStringMap);
@@ -60,7 +60,7 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
         String correlationId = UUID.randomUUID().toString();
         doCheckGoodsExist(correlationId, idGoods);
 
-        Goods goods = goodsRepository.findOne(idGoods);
+        Goods goods = goodsRepository.findById(idGoods).get();
         Map<String, String> stringStringMap = getSafeGoodsAttribute.apply(goods);
 
         stringStringMap.remove(goodsAttributeKey);
@@ -78,7 +78,7 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
 
         Goods save = doSaveGoodsData(correlationId, goods);
 
-        eventDomainPubblishService.publishGoodsEvent(correlationId,goods.getId(), goods.getName(),
+        eventDomainPubblishService.publishGoodsEvent(correlationId, goods.getId(), goods.getName(),
                 goods.getBarCode(), goods.getCategory(), EventTypeEnum.UPDATE);
         return save;
     }
@@ -89,10 +89,10 @@ public class GoodsServiceImpl extends AbstractService implements GoodsService {
 
         doCheckGoodsExist(correlationId, idGoods);
 
-        Goods one = goodsRepository.findOne(idGoods);
-        goodsRepository.delete(idGoods);
+        Goods one = goodsRepository.findById(idGoods).get();
+        goodsRepository.deleteById(idGoods);
 
-        eventDomainPubblishService.publishGoodsEvent(correlationId, idGoods, one.getName(),one.getBarCode(),
-                one.getCategory(),EventTypeEnum.DELETE);
+        eventDomainPubblishService.publishGoodsEvent(correlationId, idGoods, one.getName(), one.getBarCode(),
+                one.getCategory(), EventTypeEnum.DELETE);
     }
 }

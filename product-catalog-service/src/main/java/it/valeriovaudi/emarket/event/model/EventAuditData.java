@@ -2,7 +2,7 @@ package it.valeriovaudi.emarket.event.model;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.cassandra.mapping.UserDefinedType;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.io.Serializable;
 import java.util.Date;

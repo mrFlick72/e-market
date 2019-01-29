@@ -5,3 +5,9 @@ spring:
     config:
       discovery:
         enabled: true
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri:

@@ -89,7 +89,7 @@ public abstract class AbstractService {
         };
 
         try{
-            goodsAux =  goodsRepository.findOne(idGoods);
+            goodsAux =  goodsRepository.findById(idGoods).get();
             if(goodsAux== null){
                 throw f.apply(idGoods);
             }
@@ -107,7 +107,7 @@ public abstract class AbstractService {
         };
 
         try{
-            priceListAux =  priceListRepository.findOne(idPriceList);
+            priceListAux =  priceListRepository.findById(idPriceList).get();
             if(priceListAux== null){
                 throw f.apply(idPriceList);
             }

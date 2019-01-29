@@ -7,5 +7,5 @@ import org.springframework.data.cassandra.repository.CassandraRepository;
  * Created by vvaudi on 10/05/17.
  */
 
-public interface PriceListErrorEventRepository extends CassandraRepository<PriceListErrorEvent> {
+public interface PriceListErrorEventRepository extends CassandraRepository<PriceListErrorEvent, String> {
 }

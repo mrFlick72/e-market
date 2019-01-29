@@ -2,7 +2,7 @@ package it.valeriovaudi.emarket.event.model;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.cassandra.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 /**
  * Created by vvaudi on 10/05/17.
