@@ -1,6 +1,7 @@
 package it.valeriovaudi.emarket.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,8 +29,10 @@ public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAda
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        jwkSetUri = "http://localhost:9090/auth/sign-key/public";
         http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/goods", "/price-list").permitAll()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/goods/**", "/price-list/**").hasRole("EMPLOYEE")
                 .anyRequest().authenticated()
@@ -46,7 +49,7 @@ public class SecurityOAuth2ResourceServerConfig extends WebSecurityConfigurerAda
             Stream<SimpleGrantedAuthority> tokenAuthorities =
                     ((List<String>) jwt.getClaims().getOrDefault("authorities", Collections.<String>emptyList()))
                             .stream()
-                            .map(role -> role.startsWith("ROLE_" ) ? role : "ROLE_" + role)
+                            .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                             .map(SimpleGrantedAuthority::new);
 
 
