@@ -51,6 +51,7 @@ public class AccountIntegrationService extends AbstractIntegrationService {
     }
 
     private ResponseEntity<String> serviceCall(String userName) {
+        System.out.println(userName);
         URI uri = UriComponentsBuilder.fromHttpUrl(accountServiceUriSchema).buildAndExpand(userName).toUri();
         return accountIntegrationServiceRestTemplate.exchange(newRequestEntity(uri), String.class);
     }

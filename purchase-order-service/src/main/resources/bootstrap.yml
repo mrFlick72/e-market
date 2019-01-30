@@ -5,3 +5,5 @@ spring:
     config:
       discovery:
         enabled: true
+  main:
+    allow-bean-definition-overriding: true

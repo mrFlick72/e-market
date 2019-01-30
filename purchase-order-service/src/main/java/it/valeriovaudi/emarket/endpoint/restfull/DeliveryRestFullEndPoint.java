@@ -6,7 +6,6 @@ import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.security.SecurityUtils;
 import it.valeriovaudi.emarket.service.PurchaseOrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,7 +25,6 @@ public class DeliveryRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPo
     }
 
     @GetMapping("/{orderNumber}/delivery")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity getDeliveryDataPuchaseOrder(@PathVariable String orderNumber){
         PurchaseOrder purchaseOrder =
                 purchaseOrderService.findPurchaseOrder(securityUtils.getPrincipalUserName(), orderNumber);
@@ -34,7 +32,6 @@ public class DeliveryRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPo
     }
 
     @PutMapping("/{orderNumber}/delivery")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity deliveryDataPuchaseOrder(@PathVariable String orderNumber, @RequestBody Delivery delivery){
         purchaseOrderService.withDelivery(orderNumber, delivery);
         return ResponseEntity.noContent().build();

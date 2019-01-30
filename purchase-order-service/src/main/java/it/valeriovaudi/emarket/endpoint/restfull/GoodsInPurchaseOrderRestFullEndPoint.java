@@ -5,7 +5,6 @@ import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.security.SecurityUtils;
 import it.valeriovaudi.emarket.service.PurchaseOrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,14 +25,12 @@ public class GoodsInPurchaseOrderRestFullEndPoint extends AbstractPurchaseOrderR
     }
 
     @GetMapping("/{orderNumber}/goods")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity getGoodsDataInPuchaseOrder(@PathVariable String orderNumber){
         PurchaseOrder purchaseOrder =
                 purchaseOrderService.findPurchaseOrder(securityUtils.getPrincipalUserName(), orderNumber);
         return ResponseEntity.ok(goodsInPriceListHateoasFactory.toResources(orderNumber, purchaseOrder.getGoodsList()));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping("/{orderNumber}/goods/{goods}/price-list/{priceList}")
     public ResponseEntity saveGoodsDataInPuchaseOrder(@PathVariable String orderNumber, @PathVariable String priceList,
                                                       @PathVariable String goods, @RequestBody Integer quantity){
@@ -41,7 +38,6 @@ public class GoodsInPurchaseOrderRestFullEndPoint extends AbstractPurchaseOrderR
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{orderNumber}/goods/{goods}/price-list/{priceList}")
     public ResponseEntity removeGoodsDataInPuchaseOrder(@PathVariable String orderNumber, @PathVariable String priceList,
                                                         @PathVariable String goods){

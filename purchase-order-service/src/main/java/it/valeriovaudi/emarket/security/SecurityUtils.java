@@ -2,6 +2,7 @@ package it.valeriovaudi.emarket.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +15,8 @@ public class SecurityUtils {
     public String getPrincipalUserName(){
         String userName = "";
         try{
-            userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userName = principal.getClaims().get("user_name").toString();
             log.info("userName: in SecurityUtils: " + userName);
         } catch (Throwable t){
             // ignore it
