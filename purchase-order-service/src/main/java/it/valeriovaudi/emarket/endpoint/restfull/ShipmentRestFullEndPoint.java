@@ -1,7 +1,5 @@
 package it.valeriovaudi.emarket.endpoint.restfull;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import it.valeriovaudi.emarket.hateoas.ShipmentHateoasFactory;
 import it.valeriovaudi.emarket.model.PurchaseOrder;
 import it.valeriovaudi.emarket.model.Shipment;
@@ -30,7 +28,6 @@ public class ShipmentRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPo
 
     @GetMapping("/{orderNumber}/shipment")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @HystrixCommand(commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
     public ResponseEntity getShipmentDataPuchaseOrder(@PathVariable String orderNumber){
         PurchaseOrder purchaseOrder =
                 purchaseOrderService.findPurchaseOrder(securityUtils.getPrincipalUserName(), orderNumber);
@@ -38,7 +35,6 @@ public class ShipmentRestFullEndPoint extends AbstractPurchaseOrderRestFullEndPo
     }
     @PutMapping("/{orderNumber}/shipment")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @HystrixCommand(commandProperties = {@HystrixProperty(name="execution.isolation.strategy", value="SEMAPHORE")})
     public ResponseEntity shipmentDataPuchaseOrder(@PathVariable String orderNumber, @RequestBody Shipment shipment){
         purchaseOrderService.withShipment(orderNumber, shipment);
         return ResponseEntity.noContent().build();
