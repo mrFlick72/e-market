@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: account-service
-  cloud:
-    config:
-      discovery:
-        enabled: true
