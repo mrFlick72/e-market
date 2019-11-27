@@ -9,8 +9,11 @@ import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import reactor.core.publisher.Mono;
 
 public class MongoGoodsRepository implements GoodsRepository {
+
+    private static final String GOODS_COLLECTION_NAME = "goods";
 
     private final GoodsFactory goodsFactory;
     private final ReactiveMongoOperations mongoTemplate;
@@ -23,21 +26,22 @@ public class MongoGoodsRepository implements GoodsRepository {
 
     @Override
     public Publisher<Goods> findBy(BarCode barCode) {
-        return mongoTemplate.findOne(findOneFor(barCode), Document.class, "goods")
+        return mongoTemplate.findOne(findOneFor(barCode), Document.class, GOODS_COLLECTION_NAME)
                 .map(goodsFactory::newGoodsFor);
     }
 
 
     @Override
     public Publisher<Goods> findAll() {
-        return null;
+        return mongoTemplate.findAll(Document.class, GOODS_COLLECTION_NAME)
+                .map(goodsFactory::newGoodsFor);
     }
 
     @Override
     public Publisher<Goods> save(Goods goods) {
         return mongoTemplate.upsert(findOneFor(goods.getBarCode()),
                 Update.fromDocument(goodsFactory.newMongoDocumentFor(goods)),
-                "goods")
+                GOODS_COLLECTION_NAME)
                 .map(updateResult -> goods);
     }
 
@@ -47,7 +51,8 @@ public class MongoGoodsRepository implements GoodsRepository {
 
 
     @Override
-    public Publisher<Goods> delete(BarCode barCode) {
-        return null;
+    public Publisher<Void> delete(BarCode barCode) {
+        return mongoTemplate.remove(findOneFor(barCode), GOODS_COLLECTION_NAME)
+                .flatMap(deleteResult -> Mono.empty());
     }
 }

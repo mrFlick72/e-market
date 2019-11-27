@@ -13,5 +13,5 @@ public interface GoodsRepository {
 
     Publisher<Goods> save(Goods goods);
 
-    Publisher<Goods> delete(BarCode barCode);
+    Publisher<Void> delete(BarCode barCode);
 }
