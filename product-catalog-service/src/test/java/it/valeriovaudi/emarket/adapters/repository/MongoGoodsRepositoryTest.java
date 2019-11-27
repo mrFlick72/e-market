@@ -3,7 +3,6 @@ package it.valeriovaudi.emarket.adapters.repository;
 import it.valeriovaudi.emarket.domain.model.*;
 import it.valeriovaudi.emarket.domain.repository.GoodsRepository;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +35,8 @@ class MongoGoodsRepositoryTest {
             new Price(BigDecimal.ONE, "EUR"));
 
     @BeforeEach
-    public void setUp() {
-        goodsRepository = new MongoGoodsRepository(reactiveMongoOperations);
+    void setUp() {
+        goodsRepository = new MongoGoodsRepository(new GoodsFactory(), reactiveMongoOperations);
     }
 
     @Test
