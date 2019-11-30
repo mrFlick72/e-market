@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @DataMongoTest
@@ -68,7 +69,8 @@ class MongoGoodsRepositoryTest {
                 .blockLast(Duration.ofMinutes(1));
 
         List<Goods> foundGoods = Flux.from(goodsRepository.findAll()).collectList().block(Duration.ofMinutes(1));
-        assertEquals(asList(goods, anotherGoods), foundGoods);
+        assertTrue(foundGoods.contains(goods));
+        assertTrue(foundGoods.contains(anotherGoods));
     }
 
     @Test
