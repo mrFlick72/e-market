@@ -36,13 +36,12 @@ services:
       - mongo
 
   database:
-    image: mysql
+    image: postgres
     ports:
-      - "3306:3306"
-    volumes:
-      - "${DATABASE_LOCAL_VOLUME}:/var/lib/mysql"
+      - 5432:5432
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     networks:
       - database
 
