@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 public class GoodsRoutes {
 
     @Bean
-    public RouterFunction routes(GoodsRepository goodsRepository) {
+    public RouterFunction<?> routes(GoodsRepository goodsRepository) {
         return RouterFunctions.route()
                 .GET("/goods/{barcode}",
                         serverRequest ->
