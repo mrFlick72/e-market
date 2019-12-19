@@ -14,9 +14,10 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
+
+import static it.valeriovaudi.emarket.TestUtils.findAllPredicateMatcher;
+import static it.valeriovaudi.emarket.TestUtils.preparementTestScenarioFor;
 
 
 @DataMongoTest
@@ -45,13 +46,13 @@ class MongoGoodsRepositoryTest {
 
     @Test
     void saveANewGoods() {
-        preparementTestScenario(goods);
+        preparementTestScenarioFor(goodsRepository, goods);
     }
 
 
     @Test
     void findANewGoods() {
-        preparementTestScenario(goods);
+        preparementTestScenarioFor(goodsRepository, goods);
 
         Publisher<Goods> foundGoods = goodsRepository.findBy(goods.getBarCode());
         StepVerifier.create(foundGoods)
@@ -62,11 +63,11 @@ class MongoGoodsRepositoryTest {
 
     @Test
     void findAllGoods() {
-        preparementTestScenario(goods, anotherGoods);
+        preparementTestScenarioFor(goodsRepository, goods, anotherGoods);
 
         Publisher<Goods> findAllPublisher = goodsRepository.findAll();
 
-        Predicate<Goods> findAllPredicateMatcher = findAllPredicateMatcher();
+        Predicate<Goods> findAllPredicateMatcher = findAllPredicateMatcher(goods, anotherGoods);
         StepVerifier.create(findAllPublisher)
                 .expectNextMatches(findAllPredicateMatcher)
                 .expectNextMatches(findAllPredicateMatcher)
@@ -76,7 +77,7 @@ class MongoGoodsRepositoryTest {
 
     @Test
     void deleteAGoods() {
-        preparementTestScenario(goods, anotherGoods);
+        preparementTestScenarioFor(goodsRepository, goods, anotherGoods);
 
         Publisher<Void> deleteGoodsPublisher = goodsRepository.delete(new BarCode("A_BAR_CODE"));
         StepVerifier.create(deleteGoodsPublisher)
@@ -90,20 +91,4 @@ class MongoGoodsRepositoryTest {
                 .verify();
     }
 
-
-    private Predicate<Goods> findAllPredicateMatcher() {
-        Predicate<Goods> goodsPredicate = (nextGoods) -> Objects.deepEquals(goods, nextGoods);
-        Predicate<Goods> anotherGoodsPredicate = (nextGoods) -> Objects.deepEquals(anotherGoods, nextGoods);
-        return goodsPredicate.or(anotherGoodsPredicate);
-    }
-
-    private void preparementTestScenario(Goods... goods) {
-        Stream.of(goods).forEachOrdered(item -> {
-            StepVerifier.create(goodsRepository.save(item))
-                    .expectNext(item)
-                    .expectComplete()
-                    .verify();
-        });
-
-    }
 }
