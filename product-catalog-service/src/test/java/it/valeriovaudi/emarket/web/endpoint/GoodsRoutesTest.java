@@ -6,11 +6,13 @@ import it.valeriovaudi.emarket.domain.model.*;
 import it.valeriovaudi.emarket.domain.repository.GoodsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -40,8 +42,12 @@ public class GoodsRoutesTest {
                 )
         );
 
-        Mono.from(goodsRepository.save(goods))
-                .block(Duration.ofMinutes(1));
+        Publisher<Goods> save = goodsRepository.save(goods);
+
+        StepVerifier.create(save)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
 
         webClient.get().uri("/goods/A_BARCODE")
                 .exchange()

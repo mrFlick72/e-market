@@ -6,12 +6,16 @@ import it.valeriovaudi.emarket.domain.repository.GoodsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -49,42 +53,74 @@ class MongoGoodsRepositoryTest {
 
     @Test
     void saveANewGoods() {
-        Goods savedGoods = Flux.from(goodsRepository.save(goods)).blockLast(Duration.ofMinutes(1));
-        assertEquals(savedGoods, goods);
+        Publisher<Goods> savedGoods = goodsRepository.save(goods);
+        StepVerifier.create(savedGoods)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void findANewGoods() {
-        Goods savedGoods = Flux.from(goodsRepository.save(goods)).blockLast(Duration.ofMinutes(1));
-        Goods foundGoods = Mono.from(goodsRepository.findBy(goods.getBarCode())).block(Duration.ofMinutes(1));
-        assertEquals(savedGoods, foundGoods);
+        Publisher<Goods> savedGoods = goodsRepository.save(goods);
+        StepVerifier.create(savedGoods)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
+
+        Publisher<Goods> foundGoods = goodsRepository.findBy(goods.getBarCode());
+        StepVerifier.create(foundGoods)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void findAllGoods() {
-        Flux.zip(
-                Flux.from(goodsRepository.save(goods)),
-                Flux.from(goodsRepository.save(anotherGoods))
-        )
-                .blockLast(Duration.ofMinutes(1));
+        Publisher<Goods> goodsPublisher = goodsRepository.save(goods);
+        StepVerifier.create(goodsPublisher)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
 
-        List<Goods> foundGoods = Flux.from(goodsRepository.findAll()).collectList().block(Duration.ofMinutes(1));
-        assertTrue(foundGoods.contains(goods));
-        assertTrue(foundGoods.contains(anotherGoods));
+        Publisher<Goods> anotherGoodsPublisher = goodsRepository.save(anotherGoods);
+        StepVerifier.create(anotherGoodsPublisher)
+                .expectNext(anotherGoods)
+                .expectComplete()
+                .verify();
+
+        Publisher<Goods> findAllPublisher = goodsRepository.findAll();
+        StepVerifier.create(findAllPublisher)
+                .expectNext(goods, anotherGoods)
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void deleteAGoods() {
-        Flux.zip(
-                Flux.from(goodsRepository.save(goods)),
-                Flux.from(goodsRepository.save(anotherGoods))
-        )
-                .blockLast(Duration.ofMinutes(1));
+        Publisher<Goods> goodsPublisher = goodsRepository.save(goods);
+        StepVerifier.create(goodsPublisher)
+                .expectNext(goods)
+                .expectComplete()
+                .verify();
 
-        Flux.from(goodsRepository.delete(new BarCode("A_BAR_CODE")))
-                .blockLast(Duration.ofMinutes(1));
+        Publisher<Goods> anotherGoodsPublisher = goodsRepository.save(anotherGoods);
+        StepVerifier.create(anotherGoodsPublisher)
+                .expectNext(anotherGoods)
+                .expectComplete()
+                .verify();
 
-        List<Goods> foundGoods = Flux.from(goodsRepository.findAll()).collectList().block(Duration.ofMinutes(1));
-        assertEquals(asList(anotherGoods), foundGoods);
+
+        Publisher<Void> delteGoodsPublisher = goodsRepository.delete(new BarCode("A_BAR_CODE"));
+        StepVerifier.create(delteGoodsPublisher)
+                .expectComplete()
+                .verify();
+
+
+        Publisher<Goods> findAllPublisher = goodsRepository.findAll();
+        StepVerifier.create(findAllPublisher)
+                .expectNext(anotherGoods)
+                .expectComplete()
+                .verify();
     }
 }
