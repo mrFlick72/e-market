@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: emarket-web-site
-  cloud:
-    config:
-      discovery:
-        enabled: true

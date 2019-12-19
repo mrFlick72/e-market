@@ -1,7 +1,9 @@
-FROM frolvlad/alpine-oraclejdk8:slim
+FROM openjdk:11
 
-ADD product-catalog-service-server.jar /usr/local/product-catalog-service-server/
+ADD product-catalog.jar /usr/local/product-catalog/
 
-WORKDIR /usr/local/product-catalog-service-server/
+VOLUME /var/log/e-market
 
-CMD ["java", "-Xms512m", "-Xmx1g", "-jar", "product-catalog-service-server.jar"]
+WORKDIR /usr/local/product-catalog/
+
+CMD ["java",  "-jar", "product-catalog.jar"]

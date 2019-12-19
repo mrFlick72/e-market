@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: purchase-order-service
-  cloud:
-    config:
-      discovery:
-        enabled: true

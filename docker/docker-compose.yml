@@ -5,8 +5,6 @@ services:
 #    image: redis
 #    ports:
 #      - "6379:6379"
-#    networks:
-#      - memcache
 #
 #  rabbitmq:
 #    image: rabbitmq:3-management
@@ -14,8 +12,6 @@ services:
 #      - "5672:5672"
 #      - "15671:15671"
 #      - "15672:15672"
-#    networks:
-#      - messaging
 #
 #  cassandra:
 #    image: cassandra
@@ -23,18 +19,14 @@ services:
 #      - "${CASSANDRA_LOCAL_VOLUME}:/var/lib/cassandra"
 #    ports:
 #      - "9042:9042"
-#    networks:
-#      - cassandra
 #
-  database:
-    image: postgres
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    networks:
-      - database
+#  database:
+#    image: postgres
+#    ports:
+#      - 5432:5432
+#    environment:
+#      POSTGRES_USER: root
+#      POSTGRES_PASSWORD: root
 
   mongo:
     image: mongo
@@ -42,17 +34,5 @@ services:
       - "27017:27017"
     volumes:
       - "${MONGO_LOCAL_VOLUME}:/data/db"
-    networks:
-      - mongo
-
-networks:
-#  memcache:
-#    driver: bridge
-  database:
-    driver: bridge
-#  messaging:
-#    driver: bridge
-#  cassandra:
-#    driver: bridge
-  mongo:
-    driver: bridge
+#    networks:
+#      - mongo

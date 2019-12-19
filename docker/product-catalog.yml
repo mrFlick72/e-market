@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-catalog-service
+  namespace:  e-market
+  labels:
+    app: product-catalog
+data:
+  application.yaml: |-
+    spring:
+      data:
+        mongodb:
+          host: mongo-svc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-catalog
+  namespace:  e-market
+  labels:
+    app: product-catalog
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: product-catalog
+  template:
+    metadata:
+      namespace:  e-market
+      labels:
+        app: product-catalog
+    spec:
+      containers:
+        - name: product-catalog
+          image: mrflick72/e-market-product-catalog:latest
+          ports:
+            - containerPort: 8080
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace:  e-market
+  name: product-catalog
+spec:
+  selector:
+    app: product-catalog
+  ports:
+    - protocol: TCP
+      port: 8080

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace:  e-market
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      namespace:  e-market
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 27017
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  namespace:  e-market
+  name: mongo-svc
+spec:
+  selector:
+    app: mongo
+  ports:
+    - port: 27017
