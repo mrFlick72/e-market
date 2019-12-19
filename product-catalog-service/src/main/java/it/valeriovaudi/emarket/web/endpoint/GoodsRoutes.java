@@ -33,6 +33,11 @@ public class GoodsRoutes {
                                         .flatMap(goods -> Mono.from(goodsRepository.save(goods)))
                                         .flatMap(goods -> ServerResponse.noContent().build())
                 )
+                .DELETE("/goods/{barcode}",
+                        serverRequest ->
+                                Mono.from(goodsRepository.delete(new BarCode(serverRequest.pathVariable(BARCODE_PATH_VARIABLE_KEY))))
+                                        .then(ServerResponse.noContent().build())
+                )
                 .build();
     }
 }

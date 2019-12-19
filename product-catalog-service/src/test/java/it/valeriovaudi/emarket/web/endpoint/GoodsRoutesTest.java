@@ -12,12 +12,14 @@ import it.valeriovaudi.emarket.web.endpoint.representation.GoodsRepresentation;
 import it.valeriovaudi.emarket.web.endpoint.representation.PriceRepresentation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 
@@ -37,9 +39,7 @@ public class GoodsRoutesTest {
 
     @Test
     public void findByBarCode() throws JsonProcessingException {
-        Goods goods = aGoods();
-
-        TestUtils.preparementTestScenarioFor(goodsRepository, goods);
+        TestUtils.preparementTestScenarioFor(goodsRepository, aGoods());
 
         webClient.get().uri("/goods/A_BARCODE")
                 .exchange()
@@ -57,6 +57,22 @@ public class GoodsRoutesTest {
                 .body(BodyInserters.fromValue(objectMapper.writeValueAsString(goodsRepresentation)))
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    public void deleteAGoods() {
+        Goods goods = aGoods();
+        TestUtils.preparementTestScenarioFor(goodsRepository, goods);
+
+        webClient.delete().uri("/goods/A_BARCODE")
+                .exchange()
+                .expectStatus().isNoContent();
+
+        Publisher<Goods> foundGoods = goodsRepository.findBy(goods.getBarCode());
+        StepVerifier.create(foundGoods)
+                .expectComplete()
+                .verify();
+
     }
 
     private Goods aGoods() {
