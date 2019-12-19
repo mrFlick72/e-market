@@ -23,6 +23,7 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,19 +39,40 @@ public class GoodsRoutesTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    public void findAll() throws JsonProcessingException {
+        TestUtils.preparementTestScenarioFor(goodsRepository,
+                aGoods("A_BARCODE"),
+                aGoods("ANOTHER_BARCODE")
+        );
+
+        String expectedJson = objectMapper.writeValueAsString(
+                asList(
+                        aGoodsRepresentation("A_BARCODE"),
+                        aGoodsRepresentation("ANOTHER_BARCODE")
+                )
+        );
+
+        webClient.get().uri("/goods")
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody()
+                .json(expectedJson);
+    }
+
+    @Test
     public void findByBarCode() throws JsonProcessingException {
-        TestUtils.preparementTestScenarioFor(goodsRepository, aGoods());
+        TestUtils.preparementTestScenarioFor(goodsRepository, aGoods("A_BARCODE"));
 
         webClient.get().uri("/goods/A_BARCODE")
                 .exchange()
                 .expectStatus().is2xxSuccessful()
-                .expectBody().json(objectMapper.writeValueAsString(aGoodsRepresentation()));
+                .expectBody().json(objectMapper.writeValueAsString(aGoodsRepresentation("A_BARCODE")));
     }
 
     @Test
     public void saveANewGoods() throws JsonProcessingException {
 
-        GoodsRepresentation goodsRepresentation = aGoodsRepresentation();
+        GoodsRepresentation goodsRepresentation = aGoodsRepresentation("A_BARCODE");
 
         webClient.put().uri("/goods/A_BARCODE")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +83,7 @@ public class GoodsRoutesTest {
 
     @Test
     public void deleteAGoods() {
-        Goods goods = aGoods();
+        Goods goods = aGoods("A_BARCODE");
         TestUtils.preparementTestScenarioFor(goodsRepository, goods);
 
         webClient.delete().uri("/goods/A_BARCODE")
@@ -75,17 +97,17 @@ public class GoodsRoutesTest {
 
     }
 
-    private Goods aGoods() {
-        return new Goods(new BarCode("A_BARCODE"),
+    private Goods aGoods(String barcode) {
+        return new Goods(new BarCode(barcode),
                 new GoodsName("A_NAME"),
                 emptyList(),
                 new Price(BigDecimal.ZERO, "A_CURRENCY")
         );
     }
 
-    private GoodsRepresentation aGoodsRepresentation() {
+    private GoodsRepresentation aGoodsRepresentation(String barcode) {
         GoodsRepresentation goodsRepresentation = new GoodsRepresentation();
-        goodsRepresentation.setBarCode("A_BARCODE");
+        goodsRepresentation.setBarCode(barcode);
         goodsRepresentation.setName("A_NAME");
         goodsRepresentation.setDescriptions(emptyList());
 

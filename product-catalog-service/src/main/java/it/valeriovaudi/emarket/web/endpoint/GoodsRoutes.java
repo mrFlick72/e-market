@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static it.valeriovaudi.emarket.web.endpoint.representation.GoodsRepresentation.fromDomainToRepresentationFor;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @Configuration
@@ -21,10 +23,26 @@ public class GoodsRoutes {
     @Bean
     public RouterFunction<?> routes(GoodsRepository goodsRepository) {
         return RouterFunctions.route()
+                .GET("/goods",
+                        serverRequest ->
+                                Flux.from(goodsRepository.findAll())
+                                        .collectList()
+                                        .map(goodsList -> goodsList.stream()
+                                                .map(GoodsRepresentation::fromDomainToRepresentationFor)
+                                                .collect(toList())
+                                        )
+                                        .flatMap(goodsRepresentation ->
+                                                ServerResponse.ok()
+                                                        .body(fromValue(goodsRepresentation))
+                                        )
+                )
                 .GET("/goods/{barcode}",
                         serverRequest ->
                                 Mono.from(goodsRepository.findBy(new BarCode(serverRequest.pathVariable(BARCODE_PATH_VARIABLE_KEY))))
-                                        .flatMap(goods -> ServerResponse.ok().body(fromValue(fromDomainToRepresentationFor(goods))))
+                                        .flatMap(goods ->
+                                                ServerResponse.ok()
+                                                        .body(fromValue(fromDomainToRepresentationFor(goods)))
+                                        )
                 )
                 .PUT("/goods/{barcode}",
                         serverRequest ->
