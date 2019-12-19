@@ -38,7 +38,4 @@ public class Goods {
         return price;
     }
 
-    public Goods copyWithBarCodeFor(BarCode barCode) {
-        return new Goods(barCode, this.name, this.descriptions, this.price);
-    }
 }
