@@ -34,5 +34,3 @@ services:
       - "27017:27017"
     volumes:
       - "${MONGO_LOCAL_VOLUME}:/data/db"
-#    networks:
-#      - mongo
